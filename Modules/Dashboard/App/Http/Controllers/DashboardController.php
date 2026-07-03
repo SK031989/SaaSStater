@@ -14,12 +14,40 @@ class DashboardController extends Controller
      */
     public function index(): View
     {
-        // Gather analytics metrics
+        // Gather real database metrics
+        $totalUsers = User::count();
+        $activeAdmins = User::where('is_admin', true)->count();
+        $totalLogs = LoginActivity::count();
+        $successfulLogs = LoginActivity::where('status', 'success')->count();
+
+        // Calculate a simulated growth and value for SaaS presentation
         $metrics = [
-            'total_users'     => User::count(),
-            'active_admins'   => User::where('is_admin', true)->count(),
-            'total_logs'      => LoginActivity::count(),
-            'successful_logs' => LoginActivity::where('status', 'success')->count(),
+            'total_users'     => $totalUsers,
+            'active_admins'   => $activeAdmins,
+            'total_logs'      => $totalLogs,
+            'successful_logs' => $successfulLogs,
+            
+            // Modern SaaS Metrics (KPI Cards)
+            'sales' => [
+                'value' => '$45,289.40',
+                'change' => '+12.5%',
+                'trend' => 'up',
+            ],
+            'users' => [
+                'value' => number_format($totalUsers > 0 ? $totalUsers : 1248),
+                'change' => '+4.3%',
+                'trend' => 'up',
+            ],
+            'orders' => [
+                'value' => '1,482',
+                'change' => '-2.1%',
+                'trend' => 'down',
+            ],
+            'revenue' => [
+                'value' => '$98,245.00',
+                'change' => '+28.4%',
+                'trend' => 'up',
+            ],
         ];
 
         // Retrieve last 10 login activities
@@ -28,6 +56,140 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
-        return view('dashboard::index', compact('metrics', 'recentLogs'));
+        // High-fidelity Mock Orders
+        $recentOrders = [
+            [
+                'id' => '#ORD-8942',
+                'customer' => 'Sarah Connor',
+                'email' => 'sarah@cyberdyne.io',
+                'avatar' => 'https://ui-avatars.com/api/?name=Sarah+Connor&background=c084fc&color=fff',
+                'product' => 'Growth Pro Monthly',
+                'amount' => '$29.00',
+                'status' => 'Completed',
+                'date' => 'July 01, 2026',
+            ],
+            [
+                'id' => '#ORD-8941',
+                'customer' => 'John Doe',
+                'email' => 'john.doe@gmail.com',
+                'avatar' => 'https://ui-avatars.com/api/?name=John+Doe&background=60a5fa&color=fff',
+                'product' => 'Enterprise Custom Pack',
+                'amount' => '$1,490.00',
+                'status' => 'Completed',
+                'date' => 'June 30, 2026',
+            ],
+            [
+                'id' => '#ORD-8940',
+                'customer' => 'Marcus Wright',
+                'email' => 'marcus@projectangel.com',
+                'avatar' => 'https://ui-avatars.com/api/?name=Marcus+Wright&background=f87171&color=fff',
+                'product' => 'Growth Pro Annual',
+                'amount' => '$290.00',
+                'status' => 'Pending',
+                'date' => 'June 30, 2026',
+            ],
+            [
+                'id' => '#ORD-8939',
+                'customer' => 'Ellen Ripley',
+                'email' => 'ripley@weyland.org',
+                'avatar' => 'https://ui-avatars.com/api/?name=Ellen+Ripley&background=34d399&color=fff',
+                'product' => 'Starter Monthly',
+                'amount' => '$9.00',
+                'status' => 'Completed',
+                'date' => 'June 29, 2026',
+            ],
+            [
+                'id' => '#ORD-8938',
+                'customer' => 'Peter Parker',
+                'email' => 'peter.parker@dailybugle.com',
+                'avatar' => 'https://ui-avatars.com/api/?name=Peter+Parker&background=fbbf24&color=fff',
+                'product' => 'Growth Pro Monthly',
+                'amount' => '$29.00',
+                'status' => 'Cancelled',
+                'date' => 'June 28, 2026',
+            ],
+        ];
+
+        // Top Products List
+        $topProducts = [
+            [
+                'name' => 'Growth Pro Monthly',
+                'category' => 'SaaS Subscription',
+                'sales' => 842,
+                'revenue' => '$24,418.00',
+                'percentage' => 78,
+                'color' => 'bg-purple-600',
+            ],
+            [
+                'name' => 'Enterprise Scale Pack',
+                'category' => 'Custom Plan',
+                'sales' => 312,
+                'revenue' => '$46,488.00',
+                'percentage' => 54,
+                'color' => 'bg-blue-600',
+            ],
+            [
+                'name' => 'Starter Plan Annual',
+                'category' => 'SaaS Subscription',
+                'sales' => 240,
+                'revenue' => '$2,160.00',
+                'percentage' => 35,
+                'color' => 'bg-indigo-600',
+            ],
+            [
+                'name' => 'Developer API Access Addon',
+                'category' => 'API Token Usage',
+                'sales' => 195,
+                'revenue' => '$9,750.00',
+                'percentage' => 28,
+                'color' => 'bg-emerald-600',
+            ],
+        ];
+
+        // Sales Line Chart Data (Monthly representation)
+        $salesChart = [
+            'categories' => ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            'sales' => [28000, 32000, 31000, 38000, 42000, 40000, 45289, 48000, 52000, 50000, 58000, 64000],
+            'revenue' => [18000, 22000, 25000, 24000, 30000, 29000, 32000, 35000, 38000, 36000, 41000, 48000]
+        ];
+
+        // Donut Chart Order Status
+        $orderStatusChart = [
+            'labels' => ['Completed', 'Pending', 'Processing', 'Cancelled'],
+            'series' => [65, 18, 12, 5]
+        ];
+
+        return view('dashboard::index', compact(
+            'metrics', 
+            'recentLogs', 
+            'recentOrders', 
+            'topProducts', 
+            'salesChart', 
+            'orderStatusChart'
+        ));
+    }
+
+    /**
+     * Privacy Policy page.
+     */
+    public function privacyPolicy(): View
+    {
+        return view('dashboard::pages.privacy-policy');
+    }
+
+    /**
+     * Terms of Service page.
+     */
+    public function termsOfService(): View
+    {
+        return view('dashboard::pages.terms-of-service');
+    }
+
+    /**
+     * Support page.
+     */
+    public function support(): View
+    {
+        return view('dashboard::pages.support');
     }
 }

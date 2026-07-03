@@ -142,4 +142,13 @@ class User extends Authenticatable implements MustVerifyEmail
             'last_login_ip' => $ip,
         ])->save();
     }
+
+    // -------------------------------------------------------------------------
+    // Relationships
+    // -------------------------------------------------------------------------
+
+    public function loginActivities(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(LoginActivity::class, 'user_id');
+    }
 }

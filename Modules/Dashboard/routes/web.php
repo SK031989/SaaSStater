@@ -6,6 +6,9 @@ use Modules\Dashboard\App\Http\Middleware\EnsureUserIsAdmin;
 
 Route::middleware(['web', EnsureUserIsAdmin::class])->group(function () {
     Route::get('/admin', [DashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/admin/privacy-policy',  [DashboardController::class, 'privacyPolicy'])->name('admin.privacy-policy');
+    Route::get('/admin/terms-of-service', [DashboardController::class, 'termsOfService'])->name('admin.terms-of-service');
+    Route::get('/admin/support',          [DashboardController::class, 'support'])->name('admin.support');
 });
 
 Route::middleware(['web', 'auth'])->get('/dashboard', function () {

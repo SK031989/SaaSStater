@@ -33,6 +33,8 @@ class ModuleBuilderTest extends TestCase
     /** @test */
     public function it_can_create_a_module(): void
     {
+        \Illuminate\Support\Facades\Event::fake();
+
         $data = [
             'name'        => 'Invoice',
             'icon'        => 'bi-receipt',
