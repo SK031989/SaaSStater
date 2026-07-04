@@ -8,4 +8,3 @@ Route::get('/',           [MarketingController::class, 'index'])->name('marketin
 Route::get('/features',   [MarketingController::class, 'features'])->name('marketing.features');
 Route::get('/pricing',    [MarketingController::class, 'pricing'])->name('marketing.pricing');
 Route::get('/contact',    [MarketingController::class, 'contact'])->name('marketing.contact');
-Route::post('/set-theme', [MarketingController::class, 'setTheme'])->name('marketing.theme.set');

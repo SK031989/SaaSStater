@@ -445,6 +445,10 @@
                         <i data-lucide="cpu" class="w-4 h-4 text-indigo-500"></i>
                         <span>Open Module Builder</span>
                     </a>
+                    <a href="{{ route('admin.settings') }}" class="flex items-center gap-3 p-2 hover:bg-slate-50 dark:hover:bg-slate-850 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 no-underline transition">
+                        <i data-lucide="settings" class="w-4 h-4 text-slate-500"></i>
+                        <span>System Settings</span>
+                    </a>
                 </div>
             </div>
         </div>

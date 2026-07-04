@@ -1,6 +1,6 @@
-<nav class="navbar navbar-expand-lg navbar-light navbar-mkt sticky-top py-3">
+<nav class="navbar navbar-expand-lg navbar-mkt sticky-top py-3">
     <div class="container">
-        <a class="navbar-brand fw-bold fs-4 text-dark d-flex align-items-center gap-2" href="{{ route('marketing.index') }}">
+        <a class="navbar-brand fw-bold fs-4 d-flex align-items-center gap-2" href="{{ route('marketing.index') }}">
             <i class="bi bi-sun-fill text-warning"></i>
             <span>Minimalist</span>
         </a>
@@ -16,25 +16,11 @@
                 <li class="nav-item"><a class="nav-link nav-link-mkt {{ request()->routeIs('marketing.pricing') ? 'active' : '' }}" href="{{ route('marketing.pricing') }}">Pricing</a></li>
                 <li class="nav-item"><a class="nav-link nav-link-mkt {{ request()->routeIs('marketing.contact') ? 'active' : '' }}" href="{{ route('marketing.contact') }}">Contact</a></li>
                 
-                <li class="nav-item dropdown ms-lg-2">
-                    <button class="btn btn-sm btn-mkt-outline dropdown-toggle py-2 px-3 d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown">
-                        <i class="bi bi-sun-fill text-warning"></i>
-                        <span>Minimalist Light</span>
+                <li class="nav-item ms-lg-2">
+                    <button id="mode-toggle-btn" class="btn btn-sm btn-mkt-outline p-2 d-flex align-items-center justify-content-center" type="button" onclick="toggleMode()" title="Toggle Mode" style="min-width: 38px; min-height: 38px;">
+                        <i class="bi bi-sun-fill sun-icon d-none text-warning"></i>
+                        <i class="bi bi-moon-stars-fill moon-icon d-none text-primary"></i>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end shadow-lg" style="background: #ffffff; border: 1px solid #e2e8f0;">
-                        @foreach(config('marketing.themes') as $key => $t)
-                            <li>
-                                <form action="{{ route('marketing.theme.set') }}" method="POST">
-                                    @csrf
-                                    <input type="hidden" name="theme" value="{{ $key }}">
-                                    <button type="submit" class="dropdown-item d-flex align-items-center gap-2 py-2 text-dark">
-                                        <i class="{{ $t['icon'] }} text-warning"></i>
-                                        <span>{{ $t['name'] }}</span>
-                                    </button>
-                                </form>
-                            </li>
-                        @endforeach
-                    </ul>
                 </li>
                 <li class="nav-item ms-lg-2"><a href="{{ route('auth.login') }}" class="nav-link nav-link-mkt">Log In</a></li>
                 <li class="nav-item"><a href="{{ route('auth.register') }}" class="btn btn-sm btn-mkt-primary">Register</a></li>

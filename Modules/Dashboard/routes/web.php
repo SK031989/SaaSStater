@@ -9,6 +9,8 @@ Route::middleware(['web', EnsureUserIsAdmin::class])->group(function () {
     Route::get('/admin/privacy-policy',  [DashboardController::class, 'privacyPolicy'])->name('admin.privacy-policy');
     Route::get('/admin/terms-of-service', [DashboardController::class, 'termsOfService'])->name('admin.terms-of-service');
     Route::get('/admin/support',          [DashboardController::class, 'support'])->name('admin.support');
+    Route::get('/admin/settings',         [DashboardController::class, 'settings'])->name('admin.settings');
+    Route::post('/admin/settings',        [DashboardController::class, 'updateSettings'])->name('admin.settings.update');
 });
 
 Route::middleware(['web', 'auth'])->get('/dashboard', function () {

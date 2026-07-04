@@ -4,6 +4,8 @@ namespace Modules\Dashboard\App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Modules\Auth\App\Models\User;
 use Modules\Auth\App\Models\LoginActivity;
 
@@ -191,5 +193,41 @@ class DashboardController extends Controller
     public function support(): View
     {
         return view('dashboard::pages.support');
+    }
+
+    /**
+     * Show general settings.
+     */
+    public function settings(): View
+    {
+        $settingsPath = config_path('settings.json');
+        $activeTheme = 'obsidian';
+        if (file_exists($settingsPath)) {
+            $settings = json_decode(file_get_contents($settingsPath), true);
+            $activeTheme = $settings['active_theme'] ?? 'obsidian';
+        }
+
+        return view('dashboard::settings', compact('activeTheme'));
+    }
+
+    /**
+     * Update general settings.
+     */
+    public function updateSettings(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'theme' => 'required|string|in:obsidian,cyber,astral,minimal',
+        ]);
+
+        $settingsPath = config_path('settings.json');
+        $settings = [];
+        if (file_exists($settingsPath)) {
+            $settings = json_decode(file_get_contents($settingsPath), true);
+        }
+
+        $settings['active_theme'] = $request->input('theme');
+        file_put_contents($settingsPath, json_encode($settings, JSON_PRETTY_PRINT));
+
+        return back()->with('success', 'System settings updated successfully.');
     }
 }

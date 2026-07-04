@@ -90,7 +90,7 @@
             </a>
 
             <!-- Settings -->
-            <a href="#" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300">
+            <a href="{{ route('admin.settings') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('admin.settings') ? 'active-menu-item !text-white' : '' }}">
                 <i data-lucide="settings" class="w-5 h-5 shrink-0"></i>
                 <span class="nav-label-text">Settings</span>
             </a>

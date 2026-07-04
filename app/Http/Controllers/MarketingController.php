@@ -48,26 +48,16 @@ class MarketingController extends Controller
     }
 
     /**
-     * Switch application/marketing pages theme.
-     */
-    public function setTheme(Request $request): RedirectResponse
-    {
-        $theme = $request->input('theme', config('marketing.default_theme', 'obsidian'));
-        $allowed = array_keys(config('marketing.themes', []));
-
-        if (in_array($theme, $allowed, true)) {
-            session(['marketing_theme' => $theme]);
-        }
-
-        return back()->with('success', 'Theme switched successfully.');
-    }
-
-    /**
      * Retrieve the view path of the active theme.
      */
     protected function getThemeView(string $view): string
     {
-        $theme = session('marketing_theme', config('marketing.default_theme', 'obsidian'));
-        return "themes.{$theme}.{$view}";
+        $settingsPath = config_path('settings.json');
+        $theme = config('marketing.default_theme', 'obsidian');
+        if (file_exists($settingsPath)) {
+            $settings = json_decode(file_get_contents($settingsPath), true);
+            $theme = $settings['active_theme'] ?? $theme;
+        }
+        return "themes.{$theme}.pages.{$view}";
     }
 }
