@@ -21,9 +21,15 @@ class ProfileController extends Controller
     /**
      * Show user profile edit view.
      */
-    public function edit(Request $request): View
+    public function edit(Request $request): View|RedirectResponse
     {
         $user = $request->user();
+
+        // Redirect admin accessing non-prefixed route to the admin-prefixed one
+        if ($user->is_admin && !$request->is('admin/*')) {
+            return redirect()->route('admin.profile.edit');
+        }
+
         $user->load('loginActivities');
 
         return view('auth-module::profile', compact('user'));
@@ -36,7 +42,7 @@ class ProfileController extends Controller
     {
         $this->profileService->updateProfile($request->user(), $request->validated());
 
-        return redirect()->route('auth.profile.edit')
+        return redirect()->route($this->getProfileRedirectRoute())
             ->with('success', 'Profile information updated successfully.');
     }
 
@@ -51,7 +57,7 @@ class ProfileController extends Controller
             $request->input('new_password')
         );
 
-        return redirect()->route('auth.profile.edit')
+        return redirect()->route($this->getProfileRedirectRoute())
             ->with('success', 'Password updated successfully.');
     }
 
@@ -62,7 +68,7 @@ class ProfileController extends Controller
     {
         $this->profileService->deleteAvatar($request->user());
 
-        return redirect()->route('auth.profile.edit')
+        return redirect()->route($this->getProfileRedirectRoute())
             ->with('success', 'Profile picture removed.');
     }
 
@@ -84,8 +90,16 @@ class ProfileController extends Controller
 
             return redirect('/')->with('success', 'Your account has been deleted.');
         } catch (\Illuminate\Validation\ValidationException $e) {
-            return redirect()->route('auth.profile.edit')
+            return redirect()->route($this->getProfileRedirectRoute())
                 ->withErrors(['delete_password' => 'The provided password does not match.'], 'accountDeletion');
         }
+    }
+
+    /**
+     * Get the appropriate redirect route name depending on if the user is an admin.
+     */
+    private function getProfileRedirectRoute(): string
+    {
+        return auth()->user()->is_admin ? 'admin.profile.edit' : 'auth.profile.edit';
     }
 }

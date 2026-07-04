@@ -36,6 +36,11 @@ class AuthServiceProvider extends ServiceProvider
         // Register Policies
         Gate::policy(User::class, UserPolicy::class);
 
+        // Global bypass for Super Admins
+        Gate::before(function ($user, $ability) {
+            return $user->isAdmin() ? true : null;
+        });
+
         // Register Events & Listeners
         Event::listen(UserRegistered::class, SendWelcomeEmail::class);
         Event::listen(UserRegistered::class, [LogAuthActivity::class, 'handleRegistered']);

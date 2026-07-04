@@ -28,12 +28,6 @@
                 <i data-lucide="layout-dashboard" class="w-5 h-5 shrink-0"></i>
                 <span class="nav-label-text">Dashboard</span>
             </a>
-
-            <!-- Analytics -->
-            <a href="#" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300">
-                <i data-lucide="bar-chart-3" class="w-5 h-5 shrink-0"></i>
-                <span class="nav-label-text">Analytics</span>
-            </a>
         </div>
 
         <div class="space-y-1">
@@ -42,34 +36,52 @@
             </div>
 
             <!-- Users -->
-            <a href="#" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300">
+            <a href="{{ route('admin.users.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('admin.users.index') ? 'active-menu-item !text-white' : '' }}">
                 <i data-lucide="users" class="w-5 h-5 shrink-0"></i>
                 <span class="nav-label-text">Users</span>
             </a>
 
-            <!-- Projects -->
-            <a href="#" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300">
-                <i data-lucide="folder-kanban" class="w-5 h-5 shrink-0"></i>
-                <span class="nav-label-text">Projects</span>
-            </a>
-
-            <!-- Tasks -->
-            <a href="#" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300">
-                <i data-lucide="check-square" class="w-5 h-5 shrink-0"></i>
-                <span class="nav-label-text">Tasks</span>
-            </a>
-
-            <!-- Orders -->
-            <a href="#" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300">
-                <i data-lucide="shopping-cart" class="w-5 h-5 shrink-0"></i>
-                <span class="nav-label-text">Orders</span>
-            </a>
-
-            <!-- Products -->
-            <a href="#" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300">
-                <i data-lucide="package" class="w-5 h-5 shrink-0"></i>
-                <span class="nav-label-text">Products</span>
-            </a>
+            {{-- Dynamically list generated modules --}}
+            @if(class_exists('\Modules\ModuleBuilder\App\Models\DynamicModule'))
+                @php
+                    $sidebarModules = \Modules\ModuleBuilder\App\Models\DynamicModule::active()->generated()->orderBy('sort_order')->get();
+                @endphp
+                @foreach($sidebarModules as $sModule)
+                    @php
+                        $moduleRouteName = Route::has($sModule->slug . '.index') 
+                            ? $sModule->slug . '.index' 
+                            : (Route::has(\Illuminate\Support\Str::plural($sModule->slug) . '.index') 
+                                ? \Illuminate\Support\Str::plural($sModule->slug) . '.index' 
+                                : null);
+                        
+                        $isActive = $moduleRouteName ? (request()->routeIs($sModule->slug . '.*') || request()->routeIs(\Illuminate\Support\Str::plural($sModule->slug) . '.*')) : false;
+                        
+                        // Map Bootstrap Icons classes to Lucide icons where possible, fallback to layout-grid
+                        $lucideIcon = 'layout-grid';
+                        if ($sModule->icon) {
+                            $iconName = str_replace('bi-', '', $sModule->icon);
+                            // Mapping common ones
+                            if ($iconName === 'box-seam' || $iconName === 'box') {
+                                $lucideIcon = 'package';
+                            } elseif ($iconName === 'people' || $iconName === 'person') {
+                                $lucideIcon = 'users';
+                            } elseif ($iconName === 'folder' || $iconName === 'folder-fill') {
+                                $lucideIcon = 'folder';
+                            } elseif ($iconName === 'receipt') {
+                                $lucideIcon = 'receipt';
+                            } else {
+                                $lucideIcon = $iconName;
+                            }
+                        }
+                    @endphp
+                    @if($moduleRouteName)
+                        <a href="{{ route($moduleRouteName) }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ $isActive ? 'active-menu-item !text-white' : '' }}">
+                            <i data-lucide="{{ $lucideIcon }}" class="w-5 h-5 shrink-0"></i>
+                            <span class="nav-label-text">{{ $sModule->name }}</span>
+                        </a>
+                    @endif
+                @endforeach
+            @endif
         </div>
 
         <div class="space-y-1">
@@ -83,10 +95,10 @@
                 <span class="nav-label-text">Module Builder</span>
             </a>
 
-            <!-- Reports -->
-            <a href="#" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300">
-                <i data-lucide="trending-up" class="w-5 h-5 shrink-0"></i>
-                <span class="nav-label-text">Reports</span>
+            <!-- Roles & Permissions -->
+            <a href="{{ route('admin.roles.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('admin.roles.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="shield" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Roles & Permissions</span>
             </a>
 
             <!-- Settings -->
@@ -96,7 +108,7 @@
             </a>
 
             <!-- My Profile -->
-            <a href="{{ route('auth.profile.edit') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('auth.profile.edit') ? 'active-menu-item !text-white' : '' }}">
+            <a href="{{ route('admin.profile.edit') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('admin.profile.edit') ? 'active-menu-item !text-white' : '' }}">
                 <i data-lucide="user" class="w-5 h-5 shrink-0"></i>
                 <span class="nav-label-text">My Profile</span>
             </a>
@@ -119,17 +131,13 @@
 
             <!-- Sidebar Profile Dropdown -->
             <div id="sidebar-profile-dropdown" class="dropdown-animate hidden-dropdown absolute bottom-full left-0 right-0 z-50 mb-2 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-2 space-y-1">
-                <a href="{{ route('auth.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition animate-none">
+                <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition animate-none">
                     <i data-lucide="user" class="w-4 h-4"></i>
                     <span>My Profile</span>
                 </a>
-                <a href="{{ route('auth.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition">
+                <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition">
                     <i data-lucide="settings" class="w-4 h-4"></i>
                     <span>Account Settings</span>
-                </a>
-                <a href="#" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition">
-                    <i data-lucide="sliders" class="w-4 h-4"></i>
-                    <span>Preferences</span>
                 </a>
                 <hr class="border-slate-200 dark:border-slate-800 my-1">
                 <form action="{{ route('auth.logout') }}" method="POST">

@@ -2,9 +2,25 @@
 
 @section('title', 'Log In')
 
+@section('left-bottom')
+{{-- Default User Credentials (Visible only on desktop left pane) --}}
+<div class="card bg-primary bg-opacity-10 border border-primary border-opacity-20 p-3 text-start w-100" style="border-radius: 0.75rem;">
+    <div class="small fw-semibold text-primary mb-1"><i class="bi bi-info-circle-fill me-1"></i>Default User Credentials</div>
+    <div class="small text-light mb-1"><strong>Tenant Admin:</strong> <code>tenant1@saas.local</code> / <code>TenantPass123!</code></div>
+    <div class="small text-light"><strong>Demo User:</strong> <code>user@saas.local</code> / <code>UserPass123!</code></div>
+</div>
+@endsection
+
 @section('content')
 <h4 class="fw-bold mb-1">Welcome Back</h4>
 <p class="text-muted small mb-4">Please enter your credentials to access your account.</p>
+
+{{-- Default User Credentials (Visible only on mobile/tablet) --}}
+<div class="card bg-primary bg-opacity-10 border border-primary border-opacity-20 p-3 mb-4 text-start d-lg-none" style="border-radius: 0.75rem;">
+    <div class="small fw-semibold text-primary mb-1"><i class="bi bi-info-circle-fill me-1"></i>Default User Credentials</div>
+    <div class="small text-light mb-1"><strong>Tenant Admin:</strong> <code>tenant1@saas.local</code> / <code>TenantPass123!</code></div>
+    <div class="small text-light"><strong>Demo User:</strong> <code>user@saas.local</code> / <code>UserPass123!</code></div>
+</div>
 
 {{-- Flash Messages --}}
 @if(session('success'))

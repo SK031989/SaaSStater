@@ -109,7 +109,7 @@ class AuthenticationTest extends TestCase
             'password' => $password,
         ]);
 
-        $response->assertRedirect('/dashboard');
+        $response->assertRedirect(route('admin.dashboard'));
         $this->assertAuthenticatedAs($admin);
     }
 

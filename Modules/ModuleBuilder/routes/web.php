@@ -5,14 +5,16 @@ use Modules\ModuleBuilder\App\Http\Controllers\GeneratedModuleController;
 use Modules\ModuleBuilder\App\Http\Controllers\ModuleBuilderController;
 use Modules\ModuleBuilder\App\Http\Controllers\ModuleFieldController;
 
+use Modules\Dashboard\App\Http\Middleware\EnsureUserIsAdmin;
+
 /*
 |--------------------------------------------------------------------------
 | ModuleBuilder Web Routes
 |--------------------------------------------------------------------------
 */
 
-Route::middleware(['web', 'auth'])
-    ->prefix('module-builder')
+Route::middleware(['web', EnsureUserIsAdmin::class])
+    ->prefix('admin/module-builder')
     ->name('module-builder.')
     ->group(function () {
 

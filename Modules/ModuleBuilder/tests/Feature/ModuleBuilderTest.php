@@ -13,9 +13,19 @@ class ModuleBuilderTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    // -------------------------------------------------------------------------
-    // Module CRUD
-    // -------------------------------------------------------------------------
+    /** @test */
+    public function it_redirects_non_admin_users_to_admin_login(): void
+    {
+        $user = \Modules\Auth\App\Models\User::factory()->create([
+            'tenant_id' => 1,
+            'is_admin'  => false,
+        ]);
+
+        $response = $this->actingAs($user)
+            ->get(route('module-builder.index'));
+
+        $response->assertRedirect(route('admin.login'));
+    }
 
     /** @test */
     public function it_can_list_modules(): void

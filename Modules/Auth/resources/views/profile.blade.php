@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends(auth()->check() && auth()->user()->is_admin ? 'dashboard::layouts.admin' : 'layouts.app')
 
 @section('title', 'Profile Settings')
 
@@ -49,14 +49,14 @@
 
                         {{-- Name --}}
                         <div class="mb-3">
-                            <label for="name" class="form-label text-dark fw-semibold">Full Name</label>
+                            <label for="name" class="form-label text-slate-700 dark:text-slate-300 fw-semibold">Full Name</label>
                             <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name', $user->name) }}" required>
                             @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         {{-- Email Address --}}
                         <div class="mb-3">
-                            <label for="email" class="form-label text-dark fw-semibold">Email Address</label>
+                            <label for="email" class="form-label text-slate-700 dark:text-slate-300 fw-semibold">Email Address</label>
                             <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ old('email', $user->email) }}" required>
                             @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                             @if(config('auth-module.registration.email_verification', true) && !$user->hasVerifiedEmail())
@@ -69,7 +69,7 @@
 
                         {{-- Phone --}}
                         <div class="mb-4">
-                            <label for="phone" class="form-label text-dark fw-semibold">Phone Number</label>
+                            <label for="phone" class="form-label text-slate-700 dark:text-slate-300 fw-semibold">Phone Number</label>
                             <input type="text" name="phone" id="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ old('phone', $user->phone) }}">
                             @error('phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
@@ -144,21 +144,21 @@
 
                         {{-- Current Password --}}
                         <div class="mb-3">
-                            <label for="current_password" class="form-label text-dark fw-semibold">Current Password</label>
+                            <label for="current_password" class="form-label text-slate-700 dark:text-slate-300 fw-semibold">Current Password</label>
                             <input type="password" name="current_password" id="current_password" class="form-control @error('current_password') is-invalid @enderror" required>
                             @error('current_password') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         {{-- New Password --}}
                         <div class="mb-3">
-                            <label for="new_password" class="form-label text-dark fw-semibold">New Password</label>
+                            <label for="new_password" class="form-label text-slate-700 dark:text-slate-300 fw-semibold">New Password</label>
                             <input type="password" name="new_password" id="new_password" class="form-control @error('new_password') is-invalid @enderror" required>
                             @error('new_password') <div class="invalid-feedback">{{ $message }}</div> @enderror
                         </div>
 
                         {{-- Confirm New Password --}}
                         <div class="mb-4">
-                            <label for="new_password_confirmation" class="form-label text-dark fw-semibold">Confirm New Password</label>
+                            <label for="new_password_confirmation" class="form-label text-slate-700 dark:text-slate-300 fw-semibold">Confirm New Password</label>
                             <input type="password" name="new_password_confirmation" id="new_password_confirmation" class="form-control" required>
                         </div>
 
@@ -206,7 +206,7 @@
             <div class="modal-body">
                 <p>Are you sure you want to delete your account? This action cannot be undone.</p>
                 <div class="mb-0">
-                    <label for="delete_password" class="form-label text-dark fw-semibold">Password</label>
+                    <label for="delete_password" class="form-label text-slate-700 dark:text-slate-300 fw-semibold">Password</label>
                     <input type="password" name="delete_password" id="delete_password" class="form-control" placeholder="Enter your password to confirm" required>
                 </div>
             </div>

@@ -43,6 +43,9 @@
         body {
             font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
+        main {
+            padding-top: 5rem !important;
+        }
         /* Custom slide-out and transitions for sidebar collapse */
         .sidebar-transition {
             transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -581,18 +584,16 @@
         // All searchable items index
         const searchIndex = [
             { name: 'Dashboard', path: "{{ route('admin.dashboard') }}", category: 'Pages', icon: 'layout-dashboard', color: 'text-purple-500' },
-            { name: 'Analytics', path: '#', category: 'Pages', icon: 'bar-chart-3', color: 'text-blue-500' },
-            { name: 'Users', path: '#', category: 'Management', icon: 'users', color: 'text-teal-500' },
+            { name: 'Users', path: "{{ route('admin.users.index') }}", category: 'Management', icon: 'users', color: 'text-teal-500' },
             { name: 'Projects', path: '#', category: 'Management', icon: 'folder-kanban', color: 'text-orange-500' },
             { name: 'Tasks', path: '#', category: 'Management', icon: 'check-square', color: 'text-red-500' },
             { name: 'Orders', path: '#', category: 'Management', icon: 'shopping-cart', color: 'text-emerald-500' },
             { name: 'Products', path: '#', category: 'Management', icon: 'package', color: 'text-indigo-500' },
             { name: 'Module Builder', path: "{{ route('module-builder.index') }}", category: 'System', icon: 'cpu', color: 'text-pink-500' },
-            { name: 'Reports', path: '#', category: 'System', icon: 'trending-up', color: 'text-yellow-500' },
+            { name: 'Roles & Permissions', path: "{{ route('admin.roles.index') }}", category: 'System', icon: 'shield', color: 'text-rose-500' },
             { name: 'Settings', path: '#', category: 'System', icon: 'settings', color: 'text-slate-500' },
-            { name: 'My Profile', path: "{{ route('auth.profile.edit') }}", category: 'Account', icon: 'user', color: 'text-sky-500' },
-            { name: 'Account Settings', path: "{{ route('auth.profile.edit') }}", category: 'Account', icon: 'settings', color: 'text-purple-500' },
-            { name: 'Preferences', path: '#', category: 'Account', icon: 'sliders', color: 'text-emerald-500' }
+            { name: 'My Profile', path: "{{ route('admin.profile.edit') }}", category: 'Account', icon: 'user', color: 'text-sky-500' },
+            { name: 'Account Settings', path: "{{ route('admin.profile.edit') }}", category: 'Account', icon: 'settings', color: 'text-purple-500' }
         ];
 
         let selectedIndex = 0;

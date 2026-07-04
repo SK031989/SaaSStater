@@ -2,6 +2,15 @@
 
 @section('title', 'Admin Log In')
 
+@section('left-bottom')
+{{-- Super Admin seeded credentials card (Visible only on desktop left pane) --}}
+<div class="card bg-danger bg-opacity-10 border border-danger border-opacity-20 p-3 text-start w-100" style="border-radius: 0.75rem;">
+    <div class="small fw-semibold text-danger mb-1"><i class="bi bi-info-circle-fill me-1"></i>Default Admin Credentials</div>
+    <div class="small text-light mb-1"><strong>Email:</strong> <code>admin@saas.local</code></div>
+    <div class="small text-light"><strong>Password:</strong> <code>AdminPass123!</code></div>
+</div>
+@endsection
+
 @section('content')
 <div class="text-center mb-3">
     <span class="badge px-3 py-2 small fw-semibold" style="background: rgba(220, 53, 69, 0.2); color: #f87171; border: 1px solid rgba(220, 53, 69, 0.4);">
@@ -11,8 +20,8 @@
 <h4 class="fw-bold mb-1 text-center">Super Admin Access</h4>
 <p class="text-muted small mb-4 text-center">Authorized personnel only. Please sign in to proceed.</p>
 
-{{-- Super Admin seeded credentials card --}}
-<div class="card bg-danger bg-opacity-10 border border-danger border-opacity-20 p-3 mb-4 text-start" style="border-radius: 0.75rem;">
+{{-- Super Admin seeded credentials card (Visible only on mobile/tablet) --}}
+<div class="card bg-danger bg-opacity-10 border border-danger border-opacity-20 p-3 mb-4 text-start d-lg-none" style="border-radius: 0.75rem;">
     <div class="small fw-semibold text-danger mb-1"><i class="bi bi-info-circle-fill me-1"></i>Default Admin Credentials</div>
     <div class="small text-light mb-1"><strong>Email:</strong> <code>admin@saas.local</code></div>
     <div class="small text-light"><strong>Password:</strong> <code>AdminPass123!</code></div>

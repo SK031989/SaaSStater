@@ -21,7 +21,7 @@ class AdminLoginController extends Controller
     public function showLoginForm(): View|RedirectResponse
     {
         if (auth()->check() && auth()->user()->isAdmin()) {
-            return redirect()->intended('/dashboard');
+            return redirect()->intended(route('admin.dashboard'));
         }
 
         return view('auth-module::admin-login');
@@ -49,7 +49,7 @@ class AdminLoginController extends Controller
         
         $request->session()->regenerate();
 
-        return redirect()->intended('/dashboard')
+        return redirect()->intended(route('admin.dashboard'))
             ->with('success', 'Logged in as Super Admin.');
     }
 }

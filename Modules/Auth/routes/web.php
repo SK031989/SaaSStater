@@ -62,4 +62,16 @@ Route::middleware('web')->group(function () {
         Route::delete('/',              [ProfileController::class, 'destroy'])->name('destroy');
     });
 
+    // ── Admin Profile Settings (Admin Required) ───────────────────────────
+    Route::middleware(['auth', 'verified', \Modules\Dashboard\App\Http\Middleware\EnsureUserIsAdmin::class])
+        ->prefix('admin/profile')
+        ->name('admin.profile.')
+        ->group(function () {
+            Route::get('/',                 [ProfileController::class, 'edit'])->name('edit');
+            Route::put('/',                 [ProfileController::class, 'update'])->name('update');
+            Route::put('/password',         [ProfileController::class, 'updatePassword'])->name('password.update');
+            Route::delete('/avatar',        [ProfileController::class, 'destroyAvatar'])->name('avatar.destroy');
+            Route::delete('/',              [ProfileController::class, 'destroy'])->name('destroy');
+        });
+
 });

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Modules\Auth\App\Models\User;
 use Modules\Auth\App\Models\LoginActivity;
+use Modules\Auth\App\Enums\UserStatusEnum;
 
 class DashboardController extends Controller
 {
@@ -229,5 +230,180 @@ class DashboardController extends Controller
         file_put_contents($settingsPath, json_encode($settings, JSON_PRETTY_PRINT));
 
         return back()->with('success', 'System settings updated successfully.');
+    }
+
+    /**
+     * Display a list of all users in the system.
+     */
+    public function users(Request $request): View
+    {
+        $query = User::query();
+
+        // Search filter
+        if ($request->filled('search')) {
+            $search = $request->input('search');
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+
+        // Status filter
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        // Tenant filter
+        if ($request->filled('tenant_id')) {
+            $query->where('tenant_id', $request->input('tenant_id'));
+        }
+
+        // Paginate users
+        $users = $query->orderBy('created_at', 'desc')->paginate(10)->withQueryString();
+
+        // Get count metrics for stats cards
+        $stats = [
+            'total' => User::count(),
+            'active' => User::where('status', UserStatusEnum::Active->value ?? 'active')->count(),
+            'pending' => User::where('status', UserStatusEnum::Pending->value ?? 'pending')->count(),
+            'suspended' => User::where('status', UserStatusEnum::Suspended->value ?? 'suspended')->count(),
+        ];
+
+        $roles = \Spatie\Permission\Models\Role::all();
+
+        return view('dashboard::users.index', compact('users', 'stats', 'roles'));
+    }
+
+    /**
+     * Display a list of all roles.
+     */
+    public function rolesList(): View
+    {
+        $roles = \Spatie\Permission\Models\Role::withCount('users')->get();
+        return view('dashboard::roles.index', compact('roles'));
+    }
+
+    /**
+     * Show create role form.
+     */
+    public function roleCreate(): View
+    {
+        // Get all module permissions grouped by module
+        $modules = [];
+        if (class_exists('\Modules\ModuleBuilder\App\Models\DynamicModule')) {
+            $modules = \Modules\ModuleBuilder\App\Models\DynamicModule::active()->with('permissions')->get();
+        }
+        
+        return view('dashboard::roles.create', compact('modules'));
+    }
+
+    /**
+     * Store a new role.
+     */
+    public function roleStore(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => 'required|string|unique:roles,name',
+            'permissions' => 'nullable|array',
+        ]);
+
+        $role = \Spatie\Permission\Models\Role::create([
+            'name' => $request->input('name'),
+            'guard_name' => 'web',
+        ]);
+
+        if ($request->has('permissions')) {
+            // First ensure permissions exist in Spatie permission table
+            foreach ($request->input('permissions') as $permKey) {
+                \Spatie\Permission\Models\Permission::firstOrCreate([
+                    'name' => $permKey,
+                    'guard_name' => 'web',
+                ]);
+            }
+            $role->syncPermissions($request->input('permissions'));
+        }
+
+        return redirect()->route('admin.roles.index')->with('success', 'Role created successfully.');
+    }
+
+    /**
+     * Show edit role form.
+     */
+    public function roleEdit($roleId): View
+    {
+        $role = \Spatie\Permission\Models\Role::findOrFail($roleId);
+        $rolePermissions = $role->permissions->pluck('name')->toArray();
+
+        $modules = [];
+        if (class_exists('\Modules\ModuleBuilder\App\Models\DynamicModule')) {
+            $modules = \Modules\ModuleBuilder\App\Models\DynamicModule::active()->with('permissions')->get();
+        }
+
+        return view('dashboard::roles.edit', compact('role', 'rolePermissions', 'modules'));
+    }
+
+    /**
+     * Update an existing role.
+     */
+    public function roleUpdate(Request $request, $roleId): RedirectResponse
+    {
+        $role = \Spatie\Permission\Models\Role::findOrFail($roleId);
+
+        $request->validate([
+            'name' => 'required|string|unique:roles,name,' . $role->id,
+            'permissions' => 'nullable|array',
+        ]);
+
+        $role->update([
+            'name' => $request->input('name'),
+        ]);
+
+        if ($request->has('permissions')) {
+            // First ensure permissions exist in Spatie permission table
+            foreach ($request->input('permissions') as $permKey) {
+                \Spatie\Permission\Models\Permission::firstOrCreate([
+                    'name' => $permKey,
+                    'guard_name' => 'web',
+                ]);
+            }
+            $role->syncPermissions($request->input('permissions'));
+        } else {
+            $role->syncPermissions([]);
+        }
+
+        return redirect()->route('admin.roles.index')->with('success', 'Role updated successfully.');
+    }
+
+    /**
+     * Delete a role.
+     */
+    public function roleDestroy($roleId): RedirectResponse
+    {
+        $role = \Spatie\Permission\Models\Role::findOrFail($roleId);
+        
+        // Prevent deleting core roles
+        if (in_array($role->name, ['Super Admin', 'Tenant Admin', 'User'])) {
+            return back()->with('error', 'Core roles cannot be deleted.');
+        }
+
+        $role->delete();
+
+        return redirect()->route('admin.roles.index')->with('success', 'Role deleted successfully.');
+    }
+
+    /**
+     * Update user role.
+     */
+    public function updateUserRole(Request $request, User $user): RedirectResponse
+    {
+        $request->validate([
+            'role' => 'required|string|exists:roles,name',
+        ]);
+
+        // Sync roles (Spatie handles multiple roles, but we assign one primary role)
+        $user->syncRoles([$request->input('role')]);
+
+        return back()->with('success', "Updated role for {$user->name} successfully.");
     }
 }

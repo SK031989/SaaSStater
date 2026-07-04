@@ -117,17 +117,13 @@
             </button>
 
             <div id="topbar-avatar-dropdown" class="dropdown-animate hidden-dropdown absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-2 space-y-1">
-                <a href="{{ route('auth.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg no-underline transition">
+                <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg no-underline transition">
                     <i data-lucide="user" class="w-4 h-4"></i>
                     <span>My Profile</span>
                 </a>
-                <a href="{{ route('auth.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg no-underline transition">
+                <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg no-underline transition">
                     <i data-lucide="settings" class="w-4 h-4"></i>
                     <span>Account Settings</span>
-                </a>
-                <a href="#" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg no-underline transition">
-                    <i data-lucide="sliders" class="w-4 h-4"></i>
-                    <span>Preferences</span>
                 </a>
                 <hr class="border-slate-100 dark:border-slate-800 my-1">
                 <form action="{{ route('auth.logout') }}" method="POST">

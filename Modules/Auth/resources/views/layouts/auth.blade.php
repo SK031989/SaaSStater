@@ -16,6 +16,17 @@
             min-height: 100vh;
             overflow-x: hidden;
         }
+        @media (min-width: 992px) {
+            body {
+                height: 100vh;
+                overflow: hidden;
+            }
+            .left-visual-section,
+            .right-form-section {
+                height: 100vh;
+                overflow-y: auto;
+            }
+        }
         .left-visual-section {
             background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
             border-right: 1px solid rgba(255, 255, 255, 0.08);
@@ -145,15 +156,15 @@
         <div class="row g-0 min-vh-100">
             
             {{-- Left Section (Visual Area) --}}
-            <div class="col-lg-6 left-visual-section d-none d-lg-flex align-items-center justify-content-center text-center p-5">
-                <div class="position-relative z-1" style="max-width: 500px;">
-                    <a href="/" class="auth-logo mb-4 d-inline-block">
+            <div class="col-lg-6 left-visual-section d-none d-lg-flex flex-column align-items-center justify-content-center text-center p-4">
+                <div class="position-relative z-1 my-auto" style="max-width: 500px;">
+                    <a href="/" class="auth-logo mb-3 d-inline-block">
                         <i class="bi bi-shield-lock-fill me-2"></i>{{ config('app.name', 'SaaSStater') }}
                     </a>
-                    <h2 class="fw-bold text-white mb-3">Enterprise SaaS Blueprint</h2>
-                    <p class="text-muted mb-5">Launch faster with dynamic schema modules, robust authentication logs, active user status controls, and seamless multi-tenant isolation layers.</p>
+                    <h2 class="fw-bold text-white mb-2">Enterprise SaaS Blueprint</h2>
+                    <p class="text-muted mb-4 small">Launch faster with dynamic schema modules, robust authentication logs, active user status controls, and seamless multi-tenant isolation layers.</p>
                     
-                    <div class="d-flex flex-column gap-3 align-items-start text-start mx-auto" style="max-width: 380px;">
+                    <div class="d-flex flex-column gap-2 align-items-start text-start mx-auto" style="max-width: 380px;">
                         <div class="d-flex align-items-center gap-3">
                             <div class="p-2 rounded bg-primary bg-opacity-10 text-primary">
                                 <i class="bi bi-box-seam"></i>
@@ -174,6 +185,12 @@
                         </div>
                     </div>
                 </div>
+
+                @hasSection('left-bottom')
+                    <div class="w-100 position-relative z-1 mt-auto pt-3" style="max-width: 400px;">
+                        @yield('left-bottom')
+                    </div>
+                @endif
             </div>
 
             {{-- Right Section (Form Area) --}}

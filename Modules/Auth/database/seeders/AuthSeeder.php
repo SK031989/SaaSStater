@@ -16,8 +16,13 @@ class AuthSeeder extends Seeder
     {
         $this->command->info('Seeding Auth users...');
 
+        // 1. Create Core Spatie Roles
+        $superAdminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Super Admin', 'guard_name' => 'web']);
+        $tenantAdminRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'Tenant Admin', 'guard_name' => 'web']);
+        $userRole = \Spatie\Permission\Models\Role::firstOrCreate(['name' => 'User', 'guard_name' => 'web']);
+
         // 1. Super Admin (Global Admin)
-        User::firstOrCreate(
+        $adminUser = User::firstOrCreate(
             ['email' => 'admin@saas.local'],
             [
                 'tenant_id'          => 1,
@@ -29,9 +34,10 @@ class AuthSeeder extends Seeder
                 'email_verified_at'  => now(),
             ]
         );
+        $adminUser->assignRole($superAdminRole);
 
         // 2. Tenant 1 Admin
-        User::firstOrCreate(
+        $tenantAdmin = User::firstOrCreate(
             ['email' => 'tenant1@saas.local'],
             [
                 'tenant_id'          => 1,
@@ -43,9 +49,10 @@ class AuthSeeder extends Seeder
                 'email_verified_at'  => now(),
             ]
         );
+        $tenantAdmin->assignRole($tenantAdminRole);
 
         // 3. Demo Tenant User
-        User::firstOrCreate(
+        $demoUser = User::firstOrCreate(
             ['email' => 'user@saas.local'],
             [
                 'tenant_id'          => 1,
@@ -57,9 +64,10 @@ class AuthSeeder extends Seeder
                 'email_verified_at'  => now(),
             ]
         );
+        $demoUser->assignRole($userRole);
 
         // 4. Pending Verification User
-        User::firstOrCreate(
+        $pendingUser = User::firstOrCreate(
             ['email' => 'pending@saas.local'],
             [
                 'tenant_id'          => 1,
@@ -70,6 +78,7 @@ class AuthSeeder extends Seeder
                 'email_verified_at'  => null,
             ]
         );
+        $pendingUser->assignRole($userRole);
 
         $this->command->info('Auth users seeded successfully!');
     }
