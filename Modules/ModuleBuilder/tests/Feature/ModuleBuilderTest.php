@@ -14,7 +14,7 @@ class ModuleBuilderTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     /** @test */
-    public function it_redirects_non_admin_users_to_admin_login(): void
+    public function it_denies_access_to_non_admin_users(): void
     {
         $user = \Modules\Auth\App\Models\User::factory()->create([
             'tenant_id' => 1,
@@ -24,7 +24,7 @@ class ModuleBuilderTest extends TestCase
         $response = $this->actingAs($user)
             ->get(route('module-builder.index'));
 
-        $response->assertRedirect(route('admin.login'));
+        $response->assertStatus(403);
     }
 
     /** @test */

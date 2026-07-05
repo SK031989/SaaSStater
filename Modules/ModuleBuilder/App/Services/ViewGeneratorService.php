@@ -52,7 +52,7 @@ class ViewGeneratorService
         $varName   = lcfirst($className);
 
         return <<<BLADE
-@extends('layouts.app')
+@extends(auth()->check() ? 'dashboard::layouts.admin' : 'layouts.app')
 
 @section('title', '{$className} — List')
 
@@ -113,7 +113,7 @@ BLADE;
         $routeName = $module->route_name;
 
         return <<<BLADE
-@extends('layouts.app')
+@extends(auth()->check() ? 'dashboard::layouts.admin' : 'layouts.app')
 
 @section('title', 'Create {$className}')
 
@@ -167,7 +167,7 @@ BLADE;
         $varName   = lcfirst($className);
 
         return <<<BLADE
-@extends('layouts.app')
+@extends(auth()->check() ? 'dashboard::layouts.admin' : 'layouts.app')
 
 @section('title', 'Edit {$className}')
 
@@ -233,7 +233,7 @@ BLADE;
         $fieldRows  = $this->buildShowFieldRows($module);
 
         return <<<BLADE
-@extends('layouts.app')
+@extends(auth()->check() ? 'dashboard::layouts.admin' : 'layouts.app')
 
 @section('title', '{$className} Detail')
 

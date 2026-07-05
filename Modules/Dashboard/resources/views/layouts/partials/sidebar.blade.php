@@ -3,16 +3,21 @@
 {{-- Include in layout: @include('dashboard::layouts.partials.sidebar') --}}
 {{-- ============================================ --}}
 
+@php
+    $isSuperAdmin = auth()->check() && auth()->user()->is_admin;
+    $isAdminUser = auth()->check() && (auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin'));
+@endphp
+
 <!-- Fixed Left Sidebar -->
 <aside id="sidebar" class="sidebar-transition fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-slate-200 text-slate-700 flex flex-col -translate-x-full md:translate-x-0">
 
     <!-- Brand logo area -->
     <div class="logo-container h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800/60 shrink-0">
-        <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-3 no-underline">
+        <a href="{{ $isAdminUser ? route('admin.dashboard') : route('dashboard') }}" class="flex items-center gap-3 no-underline">
             <div class="p-2 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 shadow-md">
-                <i data-lucide="shield" class="w-5 h-5 text-white"></i>
+                <i data-lucide="{{ config('settings.project_logo', 'shield') }}" class="w-5 h-5 text-white"></i>
             </div>
-            <span class="logo-full-text font-bold text-lg tracking-tight text-slate-900 dark:text-white">SaaSStater</span>
+            <span class="logo-full-text font-bold text-lg tracking-tight text-slate-900 dark:text-white">{{ config('app.name', 'SaaSStater') }}</span>
         </a>
     </div>
 
@@ -24,7 +29,7 @@
             </div>
 
             <!-- Dashboard -->
-            <a href="{{ route('admin.dashboard') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('admin.dashboard') ? 'active-menu-item !text-white' : '' }}">
+            <a href="{{ $isAdminUser ? route('admin.dashboard') : route('dashboard') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ (request()->routeIs('admin.dashboard') || request()->routeIs('dashboard')) ? 'active-menu-item !text-white' : '' }}">
                 <i data-lucide="layout-dashboard" class="w-5 h-5 shrink-0"></i>
                 <span class="nav-label-text">Dashboard</span>
             </a>
@@ -36,10 +41,12 @@
             </div>
 
             <!-- Users -->
+            @if($isSuperAdmin)
             <a href="{{ route('admin.users.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('admin.users.index') ? 'active-menu-item !text-white' : '' }}">
                 <i data-lucide="users" class="w-5 h-5 shrink-0"></i>
                 <span class="nav-label-text">Users</span>
             </a>
+            @endif
 
             {{-- Dynamically list generated modules --}}
             @if(class_exists('\Modules\ModuleBuilder\App\Models\DynamicModule'))
@@ -48,13 +55,25 @@
                 @endphp
                 @foreach($sidebarModules as $sModule)
                     @php
-                        $moduleRouteName = Route::has($sModule->slug . '.index') 
+                        $baseRouteName = Route::has($sModule->slug . '.index') 
                             ? $sModule->slug . '.index' 
                             : (Route::has(\Illuminate\Support\Str::plural($sModule->slug) . '.index') 
                                 ? \Illuminate\Support\Str::plural($sModule->slug) . '.index' 
                                 : null);
+
+                        if ($isAdminUser && $baseRouteName) {
+                            $adminRouteName = 'admin.' . $baseRouteName;
+                            $moduleRouteName = Route::has($adminRouteName) ? $adminRouteName : $baseRouteName;
+                        } else {
+                            $moduleRouteName = $baseRouteName;
+                        }
                         
-                        $isActive = $moduleRouteName ? (request()->routeIs($sModule->slug . '.*') || request()->routeIs(\Illuminate\Support\Str::plural($sModule->slug) . '.*')) : false;
+                        $isActive = $moduleRouteName ? (
+                            request()->routeIs($sModule->slug . '.*') || 
+                            request()->routeIs(\Illuminate\Support\Str::plural($sModule->slug) . '.*') ||
+                            request()->routeIs('admin.' . $sModule->slug . '.*') || 
+                            request()->routeIs('admin.' . \Illuminate\Support\Str::plural($sModule->slug) . '.*')
+                        ) : false;
                         
                         // Map Bootstrap Icons classes to Lucide icons where possible, fallback to layout-grid
                         $lucideIcon = 'layout-grid';
@@ -74,7 +93,7 @@
                             }
                         }
                     @endphp
-                    @if($moduleRouteName)
+                    @if($moduleRouteName && ($isAdminUser || auth()->user()->can($sModule->slug . '.view') || auth()->user()->can(\Illuminate\Support\Str::plural($sModule->slug) . '.view')))
                         <a href="{{ route($moduleRouteName) }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ $isActive ? 'active-menu-item !text-white' : '' }}">
                             <i data-lucide="{{ $lucideIcon }}" class="w-5 h-5 shrink-0"></i>
                             <span class="nav-label-text">{{ $sModule->name }}</span>
@@ -84,6 +103,7 @@
             @endif
         </div>
 
+        @if($isSuperAdmin)
         <div class="space-y-1">
             <div class="sidebar-menu-category px-3 mb-2">
                 <span class="sidebar-menu-category-text text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase">System</span>
@@ -101,18 +121,13 @@
                 <span class="nav-label-text">Roles & Permissions</span>
             </a>
 
-            <!-- Settings -->
+            <!-- Configuration -->
             <a href="{{ route('admin.settings') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('admin.settings') ? 'active-menu-item !text-white' : '' }}">
                 <i data-lucide="settings" class="w-5 h-5 shrink-0"></i>
-                <span class="nav-label-text">Settings</span>
-            </a>
-
-            <!-- My Profile -->
-            <a href="{{ route('admin.profile.edit') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('admin.profile.edit') ? 'active-menu-item !text-white' : '' }}">
-                <i data-lucide="user" class="w-5 h-5 shrink-0"></i>
-                <span class="nav-label-text">My Profile</span>
+                <span class="nav-label-text">Configuration</span>
             </a>
         </div>
+        @endif
     </nav>
 
     <!-- Sidebar Bottom: User Profile Area -->
@@ -123,7 +138,7 @@
                     <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'Administrator') }}&background=6366f1&color=fff" alt="Avatar" class="w-9 h-9 rounded-xl shadow-inner border border-slate-200 dark:border-slate-700">
                     <div class="profile-details">
                         <div class="text-sm font-semibold text-slate-900 dark:text-white truncate max-w-[120px]">{{ auth()->user()->name ?? 'Administrator' }}</div>
-                        <div class="text-xs text-slate-500 dark:text-slate-500 font-medium truncate max-w-[120px]">{{ auth()->user()->is_admin ? 'Administrator' : 'User' }}</div>
+                        <div class="text-xs text-slate-500 dark:text-slate-500 font-medium truncate max-w-[120px]">{{ auth()->user()->roles->first()?->name ?? (auth()->user()->is_admin ? 'Super Admin' : 'User') }}</div>
                     </div>
                 </div>
                 <i data-lucide="chevron-up" class="profile-chevron w-4 h-4 text-slate-400"></i>
@@ -131,11 +146,11 @@
 
             <!-- Sidebar Profile Dropdown -->
             <div id="sidebar-profile-dropdown" class="dropdown-animate hidden-dropdown absolute bottom-full left-0 right-0 z-50 mb-2 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-2 space-y-1">
-                <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition animate-none">
+                <a href="{{ $isAdminUser ? route('admin.profile.edit') : route('auth.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition animate-none">
                     <i data-lucide="user" class="w-4 h-4"></i>
                     <span>My Profile</span>
                 </a>
-                <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition">
+                <a href="{{ $isAdminUser ? route('admin.profile.edit') : route('auth.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition">
                     <i data-lucide="settings" class="w-4 h-4"></i>
                     <span>Account Settings</span>
                 </a>

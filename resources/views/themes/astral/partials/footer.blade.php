@@ -36,7 +36,7 @@
         </div>
         <hr class="my-4 opacity-10" style="background-color: #d946ef;">
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
-            <span class="small text-muted">&copy; {{ date('Y') }} SaaSStater. All telemetry channels secure.</span>
+            <span class="small text-muted">&copy; {{ date('Y') }} {{ config('app.name', 'SaaSStater') }}. All telemetry channels secure.</span>
             <span class="small text-muted">Aesthetics by Antigravity AI.</span>
         </div>
     </div>

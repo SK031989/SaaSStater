@@ -19,13 +19,13 @@ class DashboardTest extends TestCase
     }
 
     /** @test */
-    public function non_admin_users_accessing_admin_are_redirected_to_admin_login()
+    public function non_admin_users_accessing_admin_are_redirected_to_dashboard()
     {
         $user = User::factory()->create(['is_admin' => false]);
 
         $response = $this->actingAs($user)->get('/admin');
 
-        $response->assertRedirect(route('admin.login'));
+        $response->assertRedirect('/admin/dashboard');
     }
 
     /** @test */
@@ -60,13 +60,14 @@ class DashboardTest extends TestCase
     }
 
     /** @test */
-    public function dashboard_route_redirects_user_to_profile_edit()
+    public function dashboard_route_allows_user_access()
     {
         $user = User::factory()->create(['is_admin' => false]);
 
         $response = $this->actingAs($user)->get('/dashboard');
 
-        $response->assertRedirect(route('auth.profile.edit'));
+        $response->assertStatus(200);
+        $response->assertSee('Dashboard');
     }
 
     /** @test */
@@ -87,7 +88,7 @@ class DashboardTest extends TestCase
 
         $response = $this->actingAs($user)->get(route('admin.users.index'));
 
-        $response->assertRedirect(route('admin.login'));
+        $response->assertStatus(403);
     }
 
     /** @test */

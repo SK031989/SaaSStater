@@ -6,7 +6,7 @@
     <section class="py-5 text-center position-relative">
         <div class="container py-5">
             <h1 class="text-white fw-bold display-4 mb-3">Cosmos Architecture Core</h1>
-            <p class="text-muted lead mx-auto" style="max-width: 600px;">Review the technical parameters and dynamic compilation components built into SaaSStater.</p>
+            <p class="text-muted lead mx-auto" style="max-width: 600px;">Review the technical parameters and dynamic compilation components built into {{ config('app.name', 'SaaSStater') }}.</p>
         </div>
     </section>
 

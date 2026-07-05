@@ -1,6 +1,6 @@
 @extends('dashboard::layouts.admin')
 
-@section('title', 'System Settings')
+@section('title', 'System Configuration')
 
 @section('content')
 <div class="container-fluid py-4">
@@ -25,17 +25,69 @@
 
             <form action="{{ route('admin.settings.update') }}" method="POST" class="space-y-6">
                 @csrf
-                <div>
-                    <label for="theme" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Active Frontend Theme</label>
-                    <select name="theme" id="theme" class="form-select block w-full md:w-1/2 p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-slate-850 dark:border-slate-800 dark:text-white">
-                        <option value="obsidian" {{ $activeTheme === 'obsidian' ? 'selected' : '' }}>Obsidian Cosmic </option>
-                        <option value="cyber" {{ $activeTheme === 'cyber' ? 'selected' : '' }}>Cyber Neon Blue</option>
-                        <option value="astral" {{ $activeTheme === 'astral' ? 'selected' : '' }}>Astral Purple Glass</option>
-                        <option value="minimal" {{ $activeTheme === 'minimal' ? 'selected' : '' }}>Minimalist Light</option>
-                    </select>
-                    @error('theme')
-                        <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                    @enderror
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="project_name" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Project Name</label>
+                        <input type="text" name="project_name" id="project_name" value="{{ old('project_name', $projectName) }}" class="form-input block w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-slate-850 dark:border-slate-855 dark:text-white" placeholder="e.g. SaaSStater">
+                        @error('project_name')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="project_logo" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Project Logo Icon (Lucide)</label>
+                        <select name="project_logo" id="project_logo" class="form-select block w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-slate-850 dark:border-slate-855 dark:text-white">
+                            @php
+                                $logos = [
+                                    'shield' => 'Shield',
+                                    'box' => 'Box',
+                                    'cpu' => 'CPU',
+                                    'database' => 'Database',
+                                    'globe' => 'Globe',
+                                    'heart' => 'Heart',
+                                    'key' => 'Key',
+                                    'lock' => 'Lock',
+                                    'settings' => 'Settings',
+                                    'user' => 'User',
+                                    'activity' => 'Activity',
+                                    'briefcase' => 'Briefcase',
+                                    'calendar' => 'Calendar',
+                                    'compass' => 'Compass',
+                                    'feather' => 'Feather',
+                                    'server' => 'Server',
+                                    'terminal' => 'Terminal',
+                                    'wind' => 'Wind'
+                                ];
+                            @endphp
+                            @foreach($logos as $value => $label)
+                                <option value="{{ $value }}" {{ old('project_logo', $projectLogo) === $value ? 'selected' : '' }}>{{ $label }}</option>
+                            @endforeach
+                        </select>
+                        @error('project_logo')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="project_description" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Project Description</label>
+                        <textarea name="project_description" id="project_description" rows="3" class="form-textarea block w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-slate-850 dark:border-slate-855 dark:text-white" placeholder="Provide a brief description of this project...">{{ old('project_description', $projectDescription) }}</textarea>
+                        @error('project_description')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="theme" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Active Frontend Theme</label>
+                        <select name="theme" id="theme" class="form-select block w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-slate-850 dark:border-slate-855 dark:text-white">
+                            <option value="obsidian" {{ $activeTheme === 'obsidian' ? 'selected' : '' }}>Obsidian Cosmic </option>
+                            <option value="cyber" {{ $activeTheme === 'cyber' ? 'selected' : '' }}>Cyber Neon Blue</option>
+                            <option value="astral" {{ $activeTheme === 'astral' ? 'selected' : '' }}>Astral Purple Glass</option>
+                            <option value="minimal" {{ $activeTheme === 'minimal' ? 'selected' : '' }}>Minimalist Light</option>
+                        </select>
+                        @error('theme')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
                 </div>
 
                 <div class="pt-4 border-t border-slate-100 dark:border-slate-800/60 flex items-center justify-end">

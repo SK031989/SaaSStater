@@ -37,7 +37,7 @@
         </div>
         <hr class="my-4" style="border-color: #1e293b; border-top-width: 2px;">
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
-            <span class="small text-muted">// &copy; {{ date('Y') }} SaaSStater. telemetry channel secure.</span>
+            <span class="small text-muted">// &copy; {{ date('Y') }} {{ config('app.name', 'SaaSStater') }}. telemetry channel secure.</span>
             <span class="small text-muted">DESIGN: TERM_CORE // ANTIGRAVITY_AI</span>
         </div>
     </div>

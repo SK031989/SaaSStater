@@ -63,6 +63,9 @@ class GeneratedModuleController extends Controller
 
         return response()->json([
             'files' => [
+                'module_json' => "{$basePath}/module.json",
+                'service_provider' => "{$basePath}/App/Providers/{$className}ServiceProvider.php",
+                'policy'     => "{$basePath}/App/Policies/{$className}Policy.php",
                 'migration'  => "{$basePath}/database/migrations/create_{$moduleBuilder->table_name}_table.php",
                 'model'      => "{$basePath}/App/Models/{$className}.php",
                 'controller' => "{$basePath}/App/Http/Controllers/{$className}Controller.php",

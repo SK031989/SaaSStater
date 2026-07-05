@@ -11,6 +11,8 @@ use Modules\ModuleBuilder\App\Models\ModuleMenu;
 use Modules\ModuleBuilder\App\Models\ModulePermission;
 use Modules\ModuleBuilder\App\Repositories\FieldRepository;
 use Modules\ModuleBuilder\App\Repositories\ModuleRepository;
+use Modules\ModuleBuilder\App\Services\PolicyGeneratorService;
+use Modules\ModuleBuilder\App\Services\ServiceProviderGeneratorService;
 
 class ModuleBuilderService
 {
@@ -22,6 +24,8 @@ class ModuleBuilderService
         protected ControllerGeneratorService $controllerGenerator,
         protected ViewGeneratorService      $viewGenerator,
         protected PermissionGeneratorService $permissionGenerator,
+        protected PolicyGeneratorService     $policyGenerator,
+        protected ServiceProviderGeneratorService $serviceProviderGenerator,
     ) {}
 
     // -------------------------------------------------------------------------
@@ -76,6 +80,17 @@ class ModuleBuilderService
             $module->fields()->delete();
             $module->menu()->delete();
             $module->permissions()->delete();
+
+            // Clean up modules_statuses.json
+            $statusesPath = base_path('modules_statuses.json');
+            if (file_exists($statusesPath)) {
+                $statuses = json_decode(file_get_contents($statusesPath), true);
+                if (isset($statuses[$module->module_class_name])) {
+                    unset($statuses[$module->module_class_name]);
+                    file_put_contents($statusesPath, json_encode($statuses, JSON_PRETTY_PRINT));
+                }
+            }
+
             return $this->moduleRepo->delete($module);
         });
     }
@@ -114,7 +129,23 @@ class ModuleBuilderService
         // 6. Routes (web + api)
         $generated['routes'] = $this->generateRoutes($module, $basePath);
 
-        // 7. Mark as generated
+        // 7. Policy
+        $generated['policy'] = $this->policyGenerator->generate($module);
+
+        // 8. Service Provider & module.json
+        $providerInfo = $this->serviceProviderGenerator->generate($module);
+        $generated['module_json'] = $providerInfo['module_json'];
+        $generated['service_provider'] = $providerInfo['service_provider'];
+
+        // 9. Enable module in modules_statuses.json
+        $statusesPath = base_path('modules_statuses.json');
+        if (file_exists($statusesPath)) {
+            $statuses = json_decode(file_get_contents($statusesPath), true);
+            $statuses[$module->module_class_name] = true;
+            file_put_contents($statusesPath, json_encode($statuses, JSON_PRETTY_PRINT));
+        }
+
+        // 10. Mark as generated
         $this->moduleRepo->markGenerated($module, $basePath);
 
         return $generated;
@@ -140,6 +171,7 @@ class ModuleBuilderService
     private function generateRoutes(DynamicModule $module, string $basePath): string
     {
         $className  = $module->module_class_name;
+        $varName    = lcfirst($className);
         $routeName  = $module->route_name;
         $routesPath = $basePath . DIRECTORY_SEPARATOR . 'routes';
 
@@ -152,12 +184,22 @@ class ModuleBuilderService
 
 use Illuminate\Support\Facades\Route;
 use Modules\\{$className}\\App\Http\Controllers\\{$className}Controller;
+use Modules\Dashboard\App\Http\Middleware\EnsureUserIsAdmin;
 
+// Admin routes (for super admin)
+Route::middleware(['web', EnsureUserIsAdmin::class])
+    ->prefix('admin/{$routeName}')
+    ->name('admin.{$routeName}.')
+    ->group(function () {
+        Route::resource('/', {$className}Controller::class)->parameters(['' => '{$varName}']);
+    });
+
+// Tenant routes (for regular users)
 Route::middleware(['web', 'auth', 'verified'])
     ->prefix('{$routeName}')
     ->name('{$routeName}.')
     ->group(function () {
-        Route::resource('/', {$className}Controller::class)->parameters(['' => '{$routeName}']);
+        Route::resource('/', {$className}Controller::class)->parameters(['' => '{$varName}']);
     });
 PHP;
 
@@ -171,7 +213,7 @@ Route::middleware(['api', 'auth:sanctum'])
     ->prefix('v1/{$routeName}')
     ->name('api.{$routeName}.')
     ->group(function () {
-        Route::apiResource('/', {$className}ApiController::class)->parameters(['' => '{$routeName}']);
+        Route::apiResource('/', {$className}ApiController::class)->parameters(['' => '{$varName}']);
     });
 PHP;
 

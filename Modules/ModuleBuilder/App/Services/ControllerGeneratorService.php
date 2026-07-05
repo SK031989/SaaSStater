@@ -62,8 +62,17 @@ class {$className}Controller extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request \$request): View
+    public function index(Request \$request)
     {
+        if (auth()->check()) {
+            \$isAdminCase = auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin');
+            if (\$isAdminCase && !request()->is('admin/*')) {
+                return redirect('/admin/' . request()->path());
+            } elseif (!\$isAdminCase && request()->is('admin/*')) {
+                return redirect('/' . preg_replace('/^admin\//', '', request()->path()));
+            }
+        }
+
         \$this->authorize('viewAny', {$className}::class);
 
         \${$varName}s = {$className}::query()
@@ -80,8 +89,17 @@ class {$className}Controller extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create()
     {
+        if (auth()->check()) {
+            \$isAdminCase = auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin');
+            if (\$isAdminCase && !request()->is('admin/*')) {
+                return redirect('/admin/' . request()->path());
+            } elseif (!\$isAdminCase && request()->is('admin/*')) {
+                return redirect('/' . preg_replace('/^admin\//', '', request()->path()));
+            }
+        }
+
         \$this->authorize('create', {$className}::class);
 
         return view('{$viewPrefix}::create');
@@ -99,16 +117,27 @@ class {$className}Controller extends Controller
 
         {$className}::create(\$data);
 
+        \$isAdminCase = auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin');
+        \$route = \$isAdminCase ? 'admin.{$routeName}.index' : '{$routeName}.index';
         return redirect()
-            ->route('{$routeName}.index')
+            ->route(\$route)
             ->with('success', '{$className} created successfully.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show({$className} \${$varName}): View
+    public function show({$className} \${$varName})
     {
+        if (auth()->check()) {
+            \$isAdminCase = auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin');
+            if (\$isAdminCase && !request()->is('admin/*')) {
+                return redirect('/admin/' . request()->path());
+            } elseif (!\$isAdminCase && request()->is('admin/*')) {
+                return redirect('/' . preg_replace('/^admin\//', '', request()->path()));
+            }
+        }
+
         \$this->authorize('view', \${$varName});
 
         return view('{$viewPrefix}::show', compact('{$varName}'));
@@ -117,8 +146,17 @@ class {$className}Controller extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit({$className} \${$varName}): View
+    public function edit({$className} \${$varName})
     {
+        if (auth()->check()) {
+            \$isAdminCase = auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin');
+            if (\$isAdminCase && !request()->is('admin/*')) {
+                return redirect('/admin/' . request()->path());
+            } elseif (!\$isAdminCase && request()->is('admin/*')) {
+                return redirect('/' . preg_replace('/^admin\//', '', request()->path()));
+            }
+        }
+
         \$this->authorize('update', \${$varName});
 
         return view('{$viewPrefix}::edit', compact('{$varName}'));
@@ -133,8 +171,10 @@ class {$className}Controller extends Controller
 
         \${$varName}->update(\$request->validated());
 
+        \$isAdminCase = auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin');
+        \$route = \$isAdminCase ? 'admin.{$routeName}.index' : '{$routeName}.index';
         return redirect()
-            ->route('{$routeName}.index')
+            ->route(\$route)
             ->with('success', '{$className} updated successfully.');
     }
 
@@ -147,8 +187,9 @@ class {$className}Controller extends Controller
 
         \${$varName}->delete();
 
+        \$route = auth()->user()->is_admin ? 'admin.{$routeName}.index' : '{$routeName}.index';
         return redirect()
-            ->route('{$routeName}.index')
+            ->route(\$route)
             ->with('success', '{$className} deleted successfully.');
     }
 }

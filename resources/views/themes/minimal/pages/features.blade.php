@@ -6,7 +6,7 @@
     <section class="py-5 text-center position-relative">
         <div class="container py-5">
             <h1 class="text-dark fw-bold display-4 mb-3">Core Platform Capabilities</h1>
-            <p class="text-muted lead mx-auto" style="max-width: 600px;">Explore the robust features and customizable structures that power SaaSStater.</p>
+            <p class="text-muted lead mx-auto" style="max-width: 600px;">Explore the robust features and customizable structures that power {{ config('app.name', 'SaaSStater') }}.</p>
         </div>
     </section>
 

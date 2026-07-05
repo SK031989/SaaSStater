@@ -112,7 +112,10 @@
         <div class="relative ml-2 pl-3 border-l border-slate-200 dark:border-slate-800">
             <button id="topbar-avatar-btn" class="flex items-center gap-2 p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition">
                 <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'Administrator') }}&background=6366f1&color=fff" class="rounded-xl w-8 h-8 object-cover border border-slate-200 dark:border-slate-700">
-                <span class="hidden sm:inline text-sm font-semibold text-slate-700 dark:text-slate-300">{{ auth()->user()->name ?? 'Admin' }}</span>
+                <div class="hidden sm:flex flex-col text-left pr-1">
+                    <span class="text-sm font-semibold text-slate-700 dark:text-slate-300 leading-none">{{ auth()->user()->name ?? 'Admin' }}</span>
+                    <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-1 leading-none">{{ auth()->user()->roles->first()?->name ?? (auth()->user()->is_admin ? 'Super Admin' : 'User') }}</span>
+                </div>
                 <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
             </button>
 

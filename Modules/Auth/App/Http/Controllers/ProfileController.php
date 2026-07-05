@@ -25,9 +25,12 @@ class ProfileController extends Controller
     {
         $user = $request->user();
 
-        // Redirect admin accessing non-prefixed route to the admin-prefixed one
-        if ($user->is_admin && !$request->is('admin/*')) {
+        // Redirect admin/tenant-admin accessing non-prefixed route to the admin-prefixed one
+        $isAdminCase = $user->is_admin || $user->hasRole('Tenant Admin');
+        if ($isAdminCase && !$request->is('admin/*')) {
             return redirect()->route('admin.profile.edit');
+        } elseif (!$isAdminCase && $request->is('admin/*')) {
+            return redirect()->route('auth.profile.edit');
         }
 
         $user->load('loginActivities');
@@ -100,6 +103,7 @@ class ProfileController extends Controller
      */
     private function getProfileRedirectRoute(): string
     {
-        return auth()->user()->is_admin ? 'admin.profile.edit' : 'auth.profile.edit';
+        $isAdminCase = auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin');
+        return $isAdminCase ? 'admin.profile.edit' : 'auth.profile.edit';
     }
 }

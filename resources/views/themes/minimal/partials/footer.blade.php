@@ -3,7 +3,7 @@
         <div class="row g-4">
             <div class="col-lg-5 col-md-6">
                 <h5 class="fw-bold mb-3 d-flex align-items-center gap-2">
-                    <i class="bi bi-sun-fill text-warning"></i> SaaSStater
+                    <i class="bi bi-sun-fill text-warning"></i> {{ config('app.name', 'SaaSStater') }}
                 </h5>
                 <p class="small text-muted mb-4" style="max-width: 380px;">
                     A clean, lightweight dashboard framework with modern light-mode grids and dynamic schema builders.
@@ -36,7 +36,7 @@
         </div>
         <hr class="my-4" style="border-color: #e2e8f0;">
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3">
-            <span class="small text-muted">&copy; {{ date('Y') }} SaaSStater. All rights reserved.</span>
+            <span class="small text-muted">&copy; {{ date('Y') }} {{ config('app.name', 'SaaSStater') }}. All rights reserved.</span>
             <span class="small text-muted">Aesthetics by Antigravity AI.</span>
         </div>
     </div>

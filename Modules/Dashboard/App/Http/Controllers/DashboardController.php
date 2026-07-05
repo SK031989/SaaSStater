@@ -15,8 +15,16 @@ class DashboardController extends Controller
     /**
      * Display the admin control panel.
      */
-    public function index(): View
+    public function index(): View|RedirectResponse
     {
+        if (auth()->check()) {
+            $isAdminCase = auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin');
+            if ($isAdminCase && !request()->is('admin/*')) {
+                return redirect()->route('admin.dashboard');
+            } elseif (!$isAdminCase && request()->is('admin/*')) {
+                return redirect()->route('dashboard');
+            }
+        }
         // Gather real database metrics
         $totalUsers = User::count();
         $activeAdmins = User::where('is_admin', true)->count();
@@ -175,24 +183,48 @@ class DashboardController extends Controller
     /**
      * Privacy Policy page.
      */
-    public function privacyPolicy(): View
+    public function privacyPolicy(): View|RedirectResponse
     {
+        if (auth()->check()) {
+            $isAdminCase = auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin');
+            if ($isAdminCase && !request()->is('admin/*')) {
+                return redirect()->route('admin.privacy-policy');
+            } elseif (!$isAdminCase && request()->is('admin/*')) {
+                return redirect()->route('privacy-policy');
+            }
+        }
         return view('dashboard::pages.privacy-policy');
     }
 
     /**
      * Terms of Service page.
      */
-    public function termsOfService(): View
+    public function termsOfService(): View|RedirectResponse
     {
+        if (auth()->check()) {
+            $isAdminCase = auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin');
+            if ($isAdminCase && !request()->is('admin/*')) {
+                return redirect()->route('admin.terms-of-service');
+            } elseif (!$isAdminCase && request()->is('admin/*')) {
+                return redirect()->route('terms-of-service');
+            }
+        }
         return view('dashboard::pages.terms-of-service');
     }
 
     /**
      * Support page.
      */
-    public function support(): View
+    public function support(): View|RedirectResponse
     {
+        if (auth()->check()) {
+            $isAdminCase = auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin');
+            if ($isAdminCase && !request()->is('admin/*')) {
+                return redirect()->route('admin.support');
+            } elseif (!$isAdminCase && request()->is('admin/*')) {
+                return redirect()->route('support');
+            }
+        }
         return view('dashboard::pages.support');
     }
 
@@ -203,12 +235,19 @@ class DashboardController extends Controller
     {
         $settingsPath = config_path('settings.json');
         $activeTheme = 'obsidian';
+        $projectName = 'SaaSStater';
+        $projectLogo = 'shield';
+        $projectDescription = '';
+
         if (file_exists($settingsPath)) {
             $settings = json_decode(file_get_contents($settingsPath), true);
             $activeTheme = $settings['active_theme'] ?? 'obsidian';
+            $projectName = $settings['project_name'] ?? 'SaaSStater';
+            $projectLogo = $settings['project_logo'] ?? 'shield';
+            $projectDescription = $settings['project_description'] ?? '';
         }
 
-        return view('dashboard::settings', compact('activeTheme'));
+        return view('dashboard::settings', compact('activeTheme', 'projectName', 'projectLogo', 'projectDescription'));
     }
 
     /**
@@ -218,6 +257,9 @@ class DashboardController extends Controller
     {
         $request->validate([
             'theme' => 'required|string|in:obsidian,cyber,astral,minimal',
+            'project_name' => 'required|string|max:50',
+            'project_logo' => 'required|string|max:50',
+            'project_description' => 'nullable|string|max:500',
         ]);
 
         $settingsPath = config_path('settings.json');
@@ -227,9 +269,22 @@ class DashboardController extends Controller
         }
 
         $settings['active_theme'] = $request->input('theme');
+        $settings['project_name'] = $request->input('project_name');
+        $settings['project_logo'] = $request->input('project_logo');
+        $settings['project_description'] = $request->input('project_description');
+
         file_put_contents($settingsPath, json_encode($settings, JSON_PRETTY_PRINT));
 
-        return back()->with('success', 'System settings updated successfully.');
+        // Update active config values immediately
+        config([
+            'app.name' => $settings['project_name'],
+            'settings.project_name' => $settings['project_name'],
+            'settings.project_logo' => $settings['project_logo'],
+            'settings.active_theme' => $settings['active_theme'],
+            'settings.project_description' => $settings['project_description'],
+        ]);
+
+        return back()->with('success', 'System configuration updated successfully.');
     }
 
     /**

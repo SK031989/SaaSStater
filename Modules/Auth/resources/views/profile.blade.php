@@ -1,4 +1,4 @@
-@extends(auth()->check() && auth()->user()->is_admin ? 'dashboard::layouts.admin' : 'layouts.app')
+@extends(auth()->check() ? 'dashboard::layouts.admin' : 'layouts.app')
 
 @section('title', 'Profile Settings')
 

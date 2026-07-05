@@ -26,9 +26,9 @@ Route::middleware(['web', EnsureUserIsAdmin::class])->group(function () {
     Route::put('/admin/users/{user}/role', [DashboardController::class, 'updateUserRole'])->name('admin.users.role.update');
 });
 
-Route::middleware(['web', 'auth'])->get('/dashboard', function () {
-    if (auth()->user()->is_admin) {
-        return redirect()->route('admin.dashboard');
-    }
-    return redirect()->route('auth.profile.edit');
-})->name('dashboard');
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/privacy-policy',  [DashboardController::class, 'privacyPolicy'])->name('privacy-policy');
+    Route::get('/terms-of-service', [DashboardController::class, 'termsOfService'])->name('terms-of-service');
+    Route::get('/support',          [DashboardController::class, 'support'])->name('support');
+});

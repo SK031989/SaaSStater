@@ -450,7 +450,7 @@
                     </a>
                     <a href="{{ route('admin.settings') }}" class="flex items-center gap-3 p-2 hover:bg-slate-50 dark:hover:bg-slate-850 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 no-underline transition">
                         <i data-lucide="settings" class="w-4 h-4 text-slate-500"></i>
-                        <span>System Settings</span>
+                        <span>System Configuration</span>
                     </a>
                 </div>
             </div>
@@ -591,7 +591,7 @@
             { name: 'Products', path: '#', category: 'Management', icon: 'package', color: 'text-indigo-500' },
             { name: 'Module Builder', path: "{{ route('module-builder.index') }}", category: 'System', icon: 'cpu', color: 'text-pink-500' },
             { name: 'Roles & Permissions', path: "{{ route('admin.roles.index') }}", category: 'System', icon: 'shield', color: 'text-rose-500' },
-            { name: 'Settings', path: '#', category: 'System', icon: 'settings', color: 'text-slate-500' },
+            { name: 'Configuration', path: "{{ route('admin.settings') }}", category: 'System', icon: 'settings', color: 'text-slate-500' },
             { name: 'My Profile', path: "{{ route('admin.profile.edit') }}", category: 'Account', icon: 'user', color: 'text-sky-500' },
             { name: 'Account Settings', path: "{{ route('admin.profile.edit') }}", category: 'Account', icon: 'settings', color: 'text-purple-500' }
         ];

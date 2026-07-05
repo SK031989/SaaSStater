@@ -17,6 +17,8 @@ use Modules\ModuleBuilder\App\Services\MigrationGeneratorService;
 use Modules\ModuleBuilder\App\Services\ModelGeneratorService;
 use Modules\ModuleBuilder\App\Services\ModuleBuilderService;
 use Modules\ModuleBuilder\App\Services\PermissionGeneratorService;
+use Modules\ModuleBuilder\App\Services\PolicyGeneratorService;
+use Modules\ModuleBuilder\App\Services\ServiceProviderGeneratorService;
 use Modules\ModuleBuilder\App\Services\ViewGeneratorService;
 
 class ModuleBuilderServiceProvider extends ServiceProvider
@@ -73,6 +75,8 @@ class ModuleBuilderServiceProvider extends ServiceProvider
         $this->app->singleton(ControllerGeneratorService::class);
         $this->app->singleton(ViewGeneratorService::class);
         $this->app->singleton(PermissionGeneratorService::class);
+        $this->app->singleton(PolicyGeneratorService::class);
+        $this->app->singleton(ServiceProviderGeneratorService::class);
 
         // Main Service
         $this->app->singleton(ModuleBuilderService::class);

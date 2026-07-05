@@ -23,6 +23,16 @@ class MigrationGeneratorService
 
         if (!is_dir($migrationsPath)) {
             mkdir($migrationsPath, 0755, true);
+        } else {
+            // Delete any existing migrations for this table to prevent duplicates
+            $existingMigrations = glob($migrationsPath . "/*_create_{$tableName}_table.php");
+            if ($existingMigrations) {
+                foreach ($existingMigrations as $oldFile) {
+                    if (file_exists($oldFile)) {
+                        unlink($oldFile);
+                    }
+                }
+            }
         }
 
         $filePath = $migrationsPath . '/' . $fileName;
