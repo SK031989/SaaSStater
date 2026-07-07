@@ -27,7 +27,40 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     
     <!-- Inline Theme script to prevent flash -->
+    <!-- Inline Theme script to prevent flash -->
     <script>
+        window.ACCENT_PALETTES = [
+            // ── Cool ──
+            { name: 'Purple',    hex: '#a855f7', rgb: '168 85 247',   light: '#f3e8ff', dark: '#7e22ce' },
+            { name: 'Violet',    hex: '#8b5cf6', rgb: '139 92 246',   light: '#ede9fe', dark: '#5b21b6' },
+            { name: 'Indigo',    hex: '#6366f1', rgb: '99 102 241',   light: '#e0e7ff', dark: '#4338ca' },
+            { name: 'Blue',      hex: '#3b82f6', rgb: '59 130 246',   light: '#dbeafe', dark: '#1d4ed8' },
+            { name: 'Sky',       hex: '#0ea5e9', rgb: '14 165 233',   light: '#e0f2fe', dark: '#0369a1' },
+            { name: 'Cyan',      hex: '#06b6d4', rgb: '6 182 212',    light: '#cffafe', dark: '#0e7490' },
+            // ── Nature ──
+            { name: 'Teal',      hex: '#14b8a6', rgb: '20 184 166',   light: '#ccfbf1', dark: '#0f766e' },
+            { name: 'Emerald',   hex: '#10b981', rgb: '16 185 129',   light: '#d1fae5', dark: '#065f46' },
+            { name: 'Green',     hex: '#22c55e', rgb: '34 197 94',    light: '#dcfce7', dark: '#15803d' },
+            { name: 'Lime',      hex: '#84cc16', rgb: '132 204 22',   light: '#ecfccb', dark: '#3f6212' },
+            // ── Warm ──
+            { name: 'Yellow',    hex: '#eab308', rgb: '234 179 8',    light: '#fef9c3', dark: '#854d0e' },
+            { name: 'Amber',     hex: '#f59e0b', rgb: '245 158 11',   light: '#fef3c7', dark: '#92400e' },
+            { name: 'Orange',    hex: '#f97316', rgb: '249 115 22',   light: '#ffedd5', dark: '#c2410c' },
+            { name: 'Red',       hex: '#ef4444', rgb: '239 68 68',    light: '#fee2e2', dark: '#b91c1c' },
+            // ── Vibrant ──
+            { name: 'Rose',      hex: '#f43f5e', rgb: '244 63 94',    light: '#ffe4e6', dark: '#9f1239' },
+            { name: 'Pink',      hex: '#ec4899', rgb: '236 72 153',   light: '#fce7f3', dark: '#9d174d' },
+            { name: 'Fuchsia',   hex: '#d946ef', rgb: '217 70 239',   light: '#fae8ff', dark: '#86198f' },
+            { name: 'Magenta',   hex: '#c026d3', rgb: '192 38 211',   light: '#fdf4ff', dark: '#701a75' },
+            // ── Neutral ──
+            { name: 'Slate',     hex: '#64748b', rgb: '100 116 139',  light: '#f1f5f9', dark: '#334155' },
+            { name: 'Gray',      hex: '#6b7280', rgb: '107 114 128',  light: '#f3f4f6', dark: '#374151' },
+            { name: 'Zinc',      hex: '#71717a', rgb: '113 113 122',  light: '#f4f4f5', dark: '#3f3f46' },
+            { name: 'Stone',     hex: '#78716c', rgb: '120 113 108',  light: '#f5f5f4', dark: '#44403c' },
+            { name: 'Copper',    hex: '#b45309', rgb: '180 83 9',     light: '#fef3c7', dark: '#92400e' },
+            { name: 'Midnight',  hex: '#1e1b4b', rgb: '30 27 75',     light: '#ede9fe', dark: '#0f0c29' },
+        ];
+
         (function() {
             const theme = localStorage.getItem('admin-theme') || 'light';
             const isDark = theme === 'dark';
@@ -36,10 +69,27 @@
             } else {
                 document.documentElement.classList.remove('dark');
             }
+
+            const savedAccent = localStorage.getItem('admin-accent') || 'Purple';
+            const palette = window.ACCENT_PALETTES.find(p => p.name === savedAccent) || window.ACCENT_PALETTES[0];
+            
+            document.documentElement.style.setProperty('--accent', palette.rgb);
+            document.documentElement.style.setProperty('--accent-light', palette.light);
+            document.documentElement.style.setProperty('--accent-dark', palette.dark);
+            document.documentElement.style.setProperty('--accent-hex', palette.hex);
+            document.documentElement.style.setProperty('--accent-hex-light', palette.light);
         })();
     </script>
     
     <style>
+        :root {
+            --accent: 168 85 247;
+            --accent-light: #f3e8ff;
+            --accent-dark: #7e22ce;
+            --accent-hex: #a855f7;
+            --accent-hex-light: #f3e8ff;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif !important;
         }
@@ -88,11 +138,123 @@
         .dark ::-webkit-scrollbar-thumb {
             background: #475569;
         }
-        /* Active menu highlight with purple gradient */
+        /* Active menu highlight with purple gradient override */
         .active-menu-item {
-            background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
-            box-shadow: 0 4px 14px 0 rgba(99, 102, 241, 0.35);
+            background: linear-gradient(135deg, var(--accent-hex) 0%, var(--accent-dark) 100%) !important;
+            box-shadow: 0 4px 14px 0 rgba(var(--accent), 0.35) !important;
             color: #ffffff !important;
+        }
+
+        /* Dynamic Tailwind background overrides */
+        .bg-purple-50, .bg-indigo-50, .dark .bg-purple-950\/10, .dark .bg-indigo-950\/10 {
+            background-color: var(--accent-hex-light) !important;
+        }
+        .bg-purple-100, .bg-indigo-100 {
+            background-color: var(--accent-hex-light) !important;
+        }
+        .bg-purple-500, .bg-indigo-500, .bg-purple-600, .bg-indigo-600 {
+            background-color: var(--accent-hex) !important;
+        }
+        .bg-purple-700, .bg-indigo-700 {
+            background-color: var(--accent-dark) !important;
+        }
+        .hover\:bg-purple-50:hover, .hover\:bg-indigo-50:hover {
+            background-color: var(--accent-hex-light) !important;
+        }
+        .hover\:bg-purple-100:hover, .hover\:bg-indigo-100:hover {
+            background-color: var(--accent-hex-light) !important;
+        }
+        .hover\:bg-purple-600:hover, .hover\:bg-indigo-600:hover {
+            background-color: var(--accent-hex) !important;
+        }
+        .hover\:bg-purple-700:hover, .hover\:bg-indigo-700:hover {
+            background-color: var(--accent-dark) !important;
+        }
+
+        /* Dynamic Tailwind text overrides */
+        .text-purple-500, .text-indigo-500, .text-purple-600, .text-indigo-600, .text-purple-700, .text-indigo-700 {
+            color: var(--accent-hex) !important;
+        }
+        .hover\:text-purple-600:hover, .hover\:text-indigo-600:hover, .hover\:text-purple-700:hover, .hover\:text-indigo-700:hover {
+            color: var(--accent-dark) !important;
+        }
+
+        /* Dynamic Tailwind border overrides */
+        .border-purple-100, .border-indigo-100 {
+            border-color: var(--accent-hex-light) !important;
+        }
+        .border-purple-500, .border-indigo-500, .border-purple-600, .border-indigo-600 {
+            border-color: var(--accent-hex) !important;
+        }
+
+        /* Dynamic Tailwind ring/focus overrides */
+        .ring-purple-500, .ring-indigo-500, .focus\:ring-purple-500:focus, .focus\:ring-indigo-500:focus {
+            --tw-ring-color: rgba(var(--accent), 0.5) !important;
+            border-color: var(--accent-hex) !important;
+        }
+        .focus\:border-purple-500:focus, .focus\:border-indigo-500:focus {
+            border-color: var(--accent-hex) !important;
+        }
+
+        /* Dynamic Tailwind Gradients overrides */
+        .from-purple-500, .from-indigo-500, .from-purple-600, .from-indigo-600 {
+            --tw-gradient-from: var(--accent-hex) !important;
+            --tw-gradient-to: var(--accent-dark) !important;
+            --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to) !important;
+        }
+        .to-purple-600, .to-indigo-600, .to-purple-700, .to-indigo-700 {
+            --tw-gradient-to: var(--accent-dark) !important;
+        }
+
+        /* Bootstrap Button primary overrides */
+        .btn-primary {
+            background-color: var(--accent-hex) !important;
+            border-color: var(--accent-hex) !important;
+            color: #fff !important;
+        }
+        .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+            background-color: var(--accent-dark) !important;
+            border-color: var(--accent-dark) !important;
+            color: #fff !important;
+            box-shadow: 0 0 0 0.25rem rgba(var(--accent), 0.25) !important;
+        }
+        .btn-outline-primary {
+            color: var(--accent-hex) !important;
+            border-color: var(--accent-hex) !important;
+        }
+        .btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active {
+            background-color: var(--accent-hex) !important;
+            border-color: var(--accent-hex) !important;
+            color: #fff !important;
+        }
+
+        /* Form control focus overrides */
+        .form-control:focus, .form-select:focus {
+            border-color: var(--accent-hex) !important;
+            box-shadow: 0 0 0 0.25rem rgba(var(--accent), 0.15) !important;
+        }
+        .form-check-input:checked {
+            background-color: var(--accent-hex) !important;
+            border-color: var(--accent-hex) !important;
+        }
+        .form-check-input:focus {
+            border-color: var(--accent-hex) !important;
+            box-shadow: 0 0 0 0.25rem rgba(var(--accent), 0.15) !important;
+        }
+
+        /* Custom scrollbar override */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(var(--accent), 0.3);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(var(--accent), 0.6);
         }
         /* Sidebar light mode nav hover */
         .sidebar-nav-hover:hover {
@@ -754,6 +916,435 @@
             const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
             setTheme(nextTheme);
         };
+
+        // ============================================================
+        // COLOR PALETTE PICKER
+        // ============================================================
+        const ACCENT_PALETTES = window.ACCENT_PALETTES;
+
+        function applyAccent(palette) {
+            const root = document.documentElement;
+            root.style.setProperty('--accent',           palette.rgb);
+            root.style.setProperty('--accent-light',     palette.light);
+            root.style.setProperty('--accent-dark',      palette.dark);
+            root.style.setProperty('--accent-hex',       palette.hex);
+            root.style.setProperty('--accent-hex-light', palette.light);
+
+            // Persist choice
+            localStorage.setItem('admin-accent', palette.name);
+
+            // ─── GLOBAL STYLE OVERRIDE ────────────────────────────────────
+            // Dynamically replace every hardcoded purple-* Tailwind class
+            // with the chosen accent color. Works across all pages/components.
+            const h = palette.hex;
+            const d = palette.dark;
+            const l = palette.light;
+            // Build a hex with opacity helper
+            const hex2rgba = (hex, alpha) => {
+                const r = parseInt(hex.slice(1,3),16);
+                const g = parseInt(hex.slice(3,5),16);
+                const b = parseInt(hex.slice(5,7),16);
+                return `rgba(${r},${g},${b},${alpha})`;
+            };
+
+            let styleEl = document.getElementById('accent-override-style');
+            if (!styleEl) {
+                styleEl = document.createElement('style');
+                styleEl.id = 'accent-override-style';
+                document.head.appendChild(styleEl);
+            }
+
+            styleEl.textContent = `
+                /* ═══════════════════════════════════════════
+                   PURPLE — ALL VARIANTS
+                ═══════════════════════════════════════════ */
+                /* Backgrounds */
+                .bg-purple-50  { background-color: ${hex2rgba(h, 0.08)} !important; }
+                .bg-purple-100 { background-color: ${hex2rgba(h, 0.15)} !important; }
+                .bg-purple-200 { background-color: ${hex2rgba(h, 0.25)} !important; }
+                .bg-purple-500 { background-color: ${h} !important; }
+                .bg-purple-600 { background-color: ${h} !important; }
+                .bg-purple-700 { background-color: ${d} !important; }
+                /* Text */
+                .text-purple-100 { color: ${hex2rgba(h, 0.9)} !important; }
+                .text-purple-300 { color: ${hex2rgba(h, 0.75)} !important; }
+                .text-purple-400 { color: ${hex2rgba(h, 0.8)} !important; }
+                .text-purple-500 { color: ${h} !important; }
+                .text-purple-600 { color: ${h} !important; }
+                .text-purple-700 { color: ${d} !important; }
+                .text-purple-900 { color: ${d} !important; }
+                /* Borders */
+                .border-purple-200   { border-color: ${hex2rgba(h, 0.3)} !important; }
+                .border-purple-400   { border-color: ${hex2rgba(h, 0.6)} !important; }
+                .border-purple-500   { border-color: ${h} !important; }
+                .border-l-purple-500 { border-left-color: ${h} !important; }
+                /* Gradients */
+                .from-purple-500 { --tw-gradient-from: ${h} !important; }
+                .from-purple-600 { --tw-gradient-from: ${h} !important; }
+                .to-purple-600   { --tw-gradient-to:   ${h} !important; }
+                .to-purple-700   { --tw-gradient-to:   ${d} !important; }
+                .via-purple-500  { --tw-gradient-via:  ${h} !important; }
+                /* Hover */
+                .hover\\:from-purple-700:hover    { --tw-gradient-from: ${d} !important; }
+                .hover\\:to-purple-700:hover      { --tw-gradient-to:   ${d} !important; }
+                .hover\\:text-purple-700:hover    { color: ${d} !important; }
+                .hover\\:border-purple-400:hover  { border-color: ${hex2rgba(h, 0.6)} !important; }
+                .hover\\:border-purple-500:hover  { border-color: ${h} !important; }
+                /* Dark variants */
+                .dark .dark\\:bg-purple-500\\/10     { background-color: ${hex2rgba(h, 0.1)} !important; }
+                .dark .dark\\:bg-purple-500\\/20     { background-color: ${hex2rgba(h, 0.2)} !important; }
+                .dark .dark\\:border-purple-500\\/20 { border-color: ${hex2rgba(h, 0.2)} !important; }
+                .dark .dark\\:text-purple-300        { color: ${hex2rgba(h, 0.85)} !important; }
+                .dark .dark\\:text-purple-400        { color: ${hex2rgba(h, 0.75)} !important; }
+                .dark .dark\\:hover\\:border-purple-500:hover { border-color: ${h} !important; }
+
+                /* ═══════════════════════════════════════════
+                   INDIGO — ALL VARIANTS (used in gradients)
+                ═══════════════════════════════════════════ */
+                .bg-indigo-50  { background-color: ${hex2rgba(h, 0.08)} !important; }
+                .bg-indigo-100 { background-color: ${hex2rgba(h, 0.15)} !important; }
+                .bg-indigo-500 { background-color: ${h} !important; }
+                .bg-indigo-600 { background-color: ${h} !important; }
+                .bg-indigo-700 { background-color: ${d} !important; }
+                .text-indigo-400 { color: ${hex2rgba(h, 0.8)} !important; }
+                .text-indigo-500 { color: ${h} !important; }
+                .text-indigo-600 { color: ${h} !important; }
+                .text-indigo-700 { color: ${d} !important; }
+                .border-indigo-500 { border-color: ${h} !important; }
+                .from-indigo-500 { --tw-gradient-from: ${h} !important; }
+                .from-indigo-600 { --tw-gradient-from: ${h} !important; }
+                .to-indigo-600   { --tw-gradient-to:   ${h} !important; }
+                .to-indigo-700   { --tw-gradient-to:   ${d} !important; }
+                .hover\\:to-indigo-700:hover { --tw-gradient-to: ${d} !important; }
+                .dark .dark\\:text-indigo-400 { color: ${hex2rgba(h, 0.8)} !important; }
+
+                /* ═══════════════════════════════════════════
+                   GRADIENT COMBINATIONS (sidebar logo, buttons)
+                ═══════════════════════════════════════════ */
+                .bg-gradient-to-tr.from-purple-600.to-indigo-600,
+                .bg-gradient-to-tr.from-purple-600,
+                [class*="from-purple-"][class*="to-indigo-"] {
+                    background-image: linear-gradient(to top right, ${h}, ${d}) !important;
+                }
+                .bg-gradient-to-br.from-purple-600,
+                [class*="from-purple-"][class*="to-indigo-"].bg-gradient-to-br {
+                    background-image: linear-gradient(to bottom right, ${h}, ${d}) !important;
+                }
+                .bg-gradient-to-r.from-purple-600,
+                .bg-gradient-to-r.from-indigo-600 {
+                    background-image: linear-gradient(to right, ${h}, ${d}) !important;
+                }
+
+                /* ═══════════════════════════════════════════
+                   BOOTSTRAP BUTTONS — btn-primary, btn-outline-primary
+                ═══════════════════════════════════════════ */
+                .btn-primary {
+                    background-color: ${h} !important;
+                    border-color: ${h} !important;
+                    color: #fff !important;
+                }
+                .btn-primary:hover, .btn-primary:focus, .btn-primary:active {
+                    background-color: ${d} !important;
+                    border-color: ${d} !important;
+                    color: #fff !important;
+                    box-shadow: 0 0 0 0.25rem ${hex2rgba(h, 0.35)} !important;
+                }
+                .btn-outline-primary {
+                    color: ${h} !important;
+                    border-color: ${h} !important;
+                    background: transparent !important;
+                }
+                .btn-outline-primary:hover, .btn-outline-primary:focus {
+                    background-color: ${h} !important;
+                    border-color: ${h} !important;
+                    color: #fff !important;
+                }
+                .btn-primary:focus-visible, .btn-outline-primary:focus-visible {
+                    box-shadow: 0 0 0 0.25rem ${hex2rgba(h, 0.35)} !important;
+                }
+
+                /* ═══════════════════════════════════════════
+                   FORM CONTROLS — focus ring + border (light & dark)
+                ═══════════════════════════════════════════ */
+                input:focus, select:focus, textarea:focus,
+                .form-control:focus, .form-select:focus, .form-textarea:focus {
+                    border-color: ${h} !important;
+                    box-shadow: 0 0 0 3px ${hex2rgba(h, 0.2)} !important;
+                    outline: none !important;
+                }
+                .focus\\:ring-purple-500:focus,
+                .focus\\:ring-indigo-500:focus {
+                    --tw-ring-color: ${h} !important;
+                    box-shadow: 0 0 0 3px ${hex2rgba(h, 0.25)} !important;
+                }
+                .focus\\:border-purple-500:focus,
+                .focus\\:border-indigo-500:focus {
+                    border-color: ${h} !important;
+                }
+                .dark .form-control:focus, .dark .form-select:focus, .dark .form-textarea:focus {
+                    border-color: ${h} !important;
+                    box-shadow: 0 0 0 0.25rem ${hex2rgba(h, 0.25)} !important;
+                }
+
+                /* ═══════════════════════════════════════════
+                   FILTER / SELECT BUTTONS
+                ═══════════════════════════════════════════ */
+                .focus\\:ring-1.focus\\:ring-purple-500:focus {
+                    box-shadow: 0 0 0 1px ${h} !important;
+                }
+                select:focus {
+                    border-color: ${h} !important;
+                    box-shadow: 0 0 0 2px ${hex2rgba(h, 0.25)} !important;
+                }
+
+                /* ═══════════════════════════════════════════
+                   ACTIVE MENU ITEM
+                ═══════════════════════════════════════════ */
+                .active-menu-item {
+                    background: linear-gradient(135deg, ${h} 0%, ${d} 100%) !important;
+                    box-shadow: 0 4px 14px 0 ${hex2rgba(h, 0.35)} !important;
+                }
+
+                /* ═══════════════════════════════════════════
+                   SHADOWS
+                ═══════════════════════════════════════════ */
+                .shadow-purple-500\\/10 { box-shadow: 0 4px 6px -1px ${hex2rgba(h, 0.1)} !important; }
+
+                /* ═══════════════════════════════════════════
+                   PROFILE / AVATAR RING ON HOVER
+                ═══════════════════════════════════════════ */
+                .accent-avatar {
+                    border-color: ${hex2rgba(h, 0.3)} !important;
+                    transition: border-color 0.2s, box-shadow 0.2s !important;
+                }
+                .accent-avatar:hover {
+                    border-color: ${h} !important;
+                    box-shadow: 0 0 0 3px ${hex2rgba(h, 0.25)} !important;
+                }
+
+                /* ═══════════════════════════════════════════
+                   BADGE / PILL ACCENTS
+                ═══════════════════════════════════════════ */
+                .badge.bg-primary, .badge-primary {
+                    background-color: ${h} !important;
+                    color: #fff !important;
+                }
+            `;
+            // ─────────────────────────────────────────────────────────────
+
+            // ── Update all .accent-avatar img src URLs ────────────────────
+            // Replace the `background=XXXXXX` param in ui-avatars URLs
+            const hexNoHash = h.replace('#', '');
+            document.querySelectorAll('img.accent-avatar').forEach(img => {
+                const currentSrc = img.src || img.getAttribute('src') || '';
+                if (currentSrc.includes('ui-avatars.com')) {
+                    img.src = currentSrc.replace(/background=[0-9a-fA-F]{6}/, `background=${hexNoHash}`);
+                }
+            });
+            // ─────────────────────────────────────────────────────────────
+
+            // Update header gradient strip
+            const strip = document.getElementById('palette-header-strip');
+            if (strip) strip.style.background = `linear-gradient(135deg, ${h} 0%, ${d} 100%)`;
+
+            // Update current name + hex label
+            const nameLabel = document.getElementById('palette-current-name');
+            if (nameLabel) nameLabel.textContent = palette.name;
+            const hexLabel = document.getElementById('palette-current-hex');
+            if (hexLabel) hexLabel.textContent = palette.hex;
+
+            // Update color count badge
+            const countBadge = document.getElementById('palette-color-count');
+            if (countBadge) countBadge.textContent = ACCENT_PALETTES.length + ' colors';
+
+            // Re-paint inline-styled accent elements
+            document.querySelectorAll('.accent-pulse-badge').forEach(el => {
+                el.style.background = `linear-gradient(135deg, ${h}, ${d})`;
+            });
+            document.querySelectorAll('.accent-btn').forEach(el => {
+                el.style.backgroundColor = h;
+            });
+
+            // Refresh grouped swatch panel
+            renderGroups();
+
+            window.dispatchEvent(new CustomEvent('accent-changed', { detail: palette }));
+
+        }
+
+        // ── Color groups definition ────────────────────────────────
+        const PALETTE_GROUPS = [
+            { label: '🌀 Cool',    emoji: '❄️', names: ['Purple','Violet','Indigo','Blue','Sky','Cyan'] },
+            { label: '🌿 Nature',  emoji: '🌿', names: ['Teal','Emerald','Green','Lime'] },
+            { label: '🔥 Warm',   emoji: '🔥', names: ['Yellow','Amber','Orange','Red'] },
+            { label: '✨ Vibrant', emoji: '✨', names: ['Rose','Pink','Fuchsia','Magenta'] },
+            { label: '🪨 Neutral', emoji: '🪨', names: ['Slate','Gray','Zinc','Stone','Copper','Midnight'] },
+        ];
+
+        function renderGroups() {
+            const groupsContainer = document.getElementById('palette-groups');
+            if (!groupsContainer) return;
+            const saved = localStorage.getItem('admin-accent') || 'Purple';
+            const isDark = document.documentElement.classList.contains('dark');
+            const borderColor = isDark ? '#1e293b' : '#f1f5f9';
+
+            groupsContainer.innerHTML = '';
+
+            PALETTE_GROUPS.forEach((group, gi) => {
+                const palettes = group.names
+                    .map(n => ACCENT_PALETTES.find(p => p.name === n))
+                    .filter(Boolean);
+                if (!palettes.length) return;
+
+                // Group wrapper
+                const groupEl = document.createElement('div');
+                groupEl.style.cssText = `
+                    margin-bottom: 10px;
+                    padding-bottom: ${gi < PALETTE_GROUPS.length - 1 ? '10px' : '0'};
+                    border-bottom: ${gi < PALETTE_GROUPS.length - 1 ? `1px solid ${borderColor}` : 'none'};
+                `;
+
+                // Group label
+                const labelEl = document.createElement('div');
+                labelEl.textContent = group.label;
+                labelEl.style.cssText = `
+                    font-size: 9px;
+                    font-weight: 700;
+                    color: #94a3b8;
+                    text-transform: uppercase;
+                    letter-spacing: 0.1em;
+                    margin-bottom: 7px;
+                    padding-left: 2px;
+                `;
+                groupEl.appendChild(labelEl);
+
+                // Swatch row grid (6-per-row max)
+                const grid = document.createElement('div');
+                grid.style.cssText = `
+                    display: grid;
+                    grid-template-columns: repeat(6, 1fr);
+                    gap: 4px;
+                `;
+
+                palettes.forEach(p => {
+                    const isActive = p.name === saved;
+                    const glow = p.hex + '55';
+
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.title = p.name;
+                    btn.onclick = () => applyAccentByName(p.name);
+                    btn.style.cssText = `
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 5px;
+                        padding: 6px 2px;
+                        border-radius: 10px;
+                        border: none;
+                        cursor: pointer;
+                        background: ${isActive ? (isDark ? 'rgba(30, 41, 59, 0.6)' : '#f1f5f9') : 'transparent'};
+                        transition: background 0.15s;
+                        width: 100%;
+                    `;
+
+                    const circle = document.createElement('span');
+                    circle.style.cssText = `
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 30px;
+                        height: 30px;
+                        border-radius: 9999px;
+                        background-color: ${p.hex};
+                        transition: transform 0.15s, box-shadow 0.15s;
+                        transform: ${isActive ? 'scale(1.15)' : 'scale(1)'};
+                        box-shadow: ${isActive ? `0 0 0 2px ${isDark ? '#0f172a' : 'white'}, 0 0 0 4px ${p.hex}, 0 3px 10px ${glow}` : 'none'};
+                    `;
+                    if (isActive) {
+                        circle.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="none" viewBox="0 0 24 24" stroke="white" stroke-width="3.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>`;
+                    }
+
+                    const lbl = document.createElement('span');
+                    lbl.textContent = p.name;
+                    lbl.style.cssText = `
+                        font-size: 8px;
+                        font-weight: ${isActive ? '700' : '500'};
+                        color: ${isActive ? p.hex : '#94a3b8'};
+                        line-height: 1;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 100%;
+                        transition: color 0.15s;
+                    `;
+
+                    btn.addEventListener('mouseenter', () => {
+                        if (!isActive) { 
+                            btn.style.background = isDark ? 'rgba(30, 41, 59, 0.4)' : '#f8fafc'; 
+                            circle.style.transform = 'scale(1.08)'; 
+                            lbl.style.color = isDark ? '#cbd5e1' : '#64748b'; 
+                        }
+                    });
+                    btn.addEventListener('mouseleave', () => {
+                        if (!isActive) { 
+                            btn.style.background = 'transparent'; 
+                            circle.style.transform = 'scale(1)'; 
+                            lbl.style.color = '#94a3b8'; 
+                        }
+                    });
+
+                    btn.appendChild(circle);
+                    btn.appendChild(lbl);
+                    grid.appendChild(btn);
+                });
+
+                groupEl.appendChild(grid);
+                groupsContainer.appendChild(groupEl);
+            });
+        }
+
+        window.applyAccentByName = function(name) {
+            const p = ACCENT_PALETTES.find(x => x.name === name);
+            if (p) applyAccent(p);
+        };
+
+        // Boot: load saved accent or default to Purple
+        (function initAccent() {
+            const savedName = localStorage.getItem('admin-accent') || 'Purple';
+            const palette = ACCENT_PALETTES.find(p => p.name === savedName) || ACCENT_PALETTES[0];
+            applyAccent(palette);
+        })();
+
+        // Reset button: clear saved accent & reapply default (Purple)
+        const paletteResetBtn = document.getElementById('palette-reset-btn');
+        if (paletteResetBtn) {
+            paletteResetBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                localStorage.removeItem('admin-accent');
+                const defaultPalette = ACCENT_PALETTES[0]; // Purple
+                applyAccent(defaultPalette);
+
+                // Brief visual feedback on the button
+                paletteResetBtn.classList.add('text-rose-500');
+                setTimeout(() => paletteResetBtn.classList.remove('text-rose-500'), 800);
+            });
+        }
+
+        // Wire up the palette button to the dropdown system
+        setupDropdown('color-palette-btn', 'color-palette-dropdown');
+
+        // Scroll fade: hide gradient when user scrolls to bottom of swatch list
+        const swatchScroll = document.getElementById('palette-swatches-scroll');
+        const scrollFade   = document.getElementById('palette-scroll-fade');
+        if (swatchScroll && scrollFade) {
+            swatchScroll.addEventListener('scroll', () => {
+                const atBottom = swatchScroll.scrollTop + swatchScroll.clientHeight >= swatchScroll.scrollHeight - 4;
+                scrollFade.style.opacity = atBottom ? '0' : '1';
+                scrollFade.style.transition = 'opacity 0.2s';
+            });
+        }
+
     </script>
     @stack('scripts')
 </body>
