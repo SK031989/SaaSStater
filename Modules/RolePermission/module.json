@@ -1,0 +1,11 @@
+{
+    "name": "RolePermission",
+    "alias": "rolepermission",
+    "description": "Multi-Tenant Roles and Spatie Permissions Module for SaaS",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\RolePermission\\Providers\\RolePermissionServiceProvider"
+    ],
+    "files": []
+}

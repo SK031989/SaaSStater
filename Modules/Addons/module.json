@@ -1,0 +1,11 @@
+{
+    "name": "Addons",
+    "alias": "addons",
+    "description": "Addons and Feature Extensions Module for SaaS",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Addons\\Providers\\AddonServiceProvider"
+    ],
+    "files": []
+}

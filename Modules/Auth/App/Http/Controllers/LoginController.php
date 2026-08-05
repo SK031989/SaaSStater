@@ -27,22 +27,28 @@ class LoginController extends Controller
 
     /**
      * Handle login form submission.
+     *
+     * If a Super Admin logs in via this route, authenticate them
+     * and redirect to the admin dashboard automatically.
      */
     public function login(LoginRequest $request): RedirectResponse
     {
         $credentials = $request->only('email', 'password');
-        
-        $userRepo = app(\Modules\Auth\App\Repositories\UserRepository::class);
-        $user = $userRepo->findByEmail($credentials['email']);
 
+        $userRepo = app(\Modules\Auth\App\Repositories\UserRepository::class);
+        $user     = $userRepo->findByEmail($credentials['email']);
+
+        // Super Admin → authenticate and redirect to admin dashboard
         if ($user && $user->isAdmin()) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
-                'email' => ['Super Administrators must log in through the admin route.'],
-            ]);
+            $authenticatedUser = $this->authService->login($credentials, $request->boolean('remember'));
+            $request->session()->regenerate();
+
+            return redirect()->route('admin.dashboard')
+                ->with('success', "Welcome back, {$authenticatedUser->first_name}! Redirected to Admin Dashboard.");
         }
 
+        // Regular user login
         $authenticatedUser = $this->authService->login($credentials, $request->boolean('remember'));
-
         $request->session()->regenerate();
 
         return redirect()->intended(config('auth-module.redirects.login', '/dashboard'))

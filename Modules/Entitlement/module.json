@@ -1,0 +1,11 @@
+{
+    "name": "Entitlement",
+    "alias": "entitlement",
+    "description": "Entitlements and Feature Quota Management Module for SaaS",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Entitlement\\Providers\\EntitlementServiceProvider"
+    ],
+    "files": []
+}

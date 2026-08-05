@@ -1,0 +1,11 @@
+{
+    "name": "Coupons",
+    "alias": "coupons",
+    "description": "Coupons and Promotional Discounts Module for SaaS",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Coupons\\Providers\\CouponServiceProvider"
+    ],
+    "files": []
+}

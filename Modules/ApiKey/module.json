@@ -1,0 +1,11 @@
+{
+    "name": "ApiKey",
+    "alias": "apikey",
+    "description": "Tenant API Key and Webhook Management Module for SaaS",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\ApiKey\\Providers\\ApiKeyServiceProvider"
+    ],
+    "files": []
+}

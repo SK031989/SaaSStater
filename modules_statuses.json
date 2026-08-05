@@ -1,7 +1,16 @@
 {
     "ModuleBuilder": true,
     "Auth": true,
-    "Marketing": true,
     "Dashboard": true,
-    "Product": true
+    "Product": true,
+    "Tenant": true,
+    "Subscription": true,
+    "Entitlement": true,
+    "Billing": true,
+    "Addons": true,
+    "Coupons": true,
+    "RolePermission": true,
+    "Notification": true,
+    "ApiKey": true,
+    "Support": true
 }

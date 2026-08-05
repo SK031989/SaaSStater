@@ -35,6 +35,80 @@
             </a>
         </div>
 
+        @if($isSuperAdmin)
+        <div class="space-y-1">
+            <div class="sidebar-menu-category px-3 mb-2">
+                <span class="sidebar-menu-category-text text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase">SaaS Operations</span>
+            </div>
+
+            <!-- Tenants -->
+            <a href="{{ route('tenants.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('tenants.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="building-2" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Tenants</span>
+            </a>
+
+            <!-- Subscription Plans -->
+            <a href="{{ route('subscriptions.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('subscriptions.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="credit-card" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Subscriptions</span>
+            </a>
+
+            <!-- Entitlements -->
+            <a href="{{ route('entitlements.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('entitlements.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="sliders" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Entitlements</span>
+            </a>
+
+            <!-- Billing & Invoices -->
+            <a href="{{ route('billings.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('billings.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="receipt" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Billing</span>
+            </a>
+
+            <!-- Addons -->
+            <a href="{{ route('addons.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('addons.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="puzzle" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Addons</span>
+            </a>
+
+            <!-- Coupons -->
+            <a href="{{ route('coupons.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('coupons.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="ticket-percent" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Coupons</span>
+            </a>
+
+            <!-- Roles & Permissions -->
+            <a href="{{ route('rolepermissions.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('rolepermissions.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="shield" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Roles & Permissions</span>
+            </a>
+        </div>
+
+        <div class="space-y-1">
+            <div class="sidebar-menu-category px-3 mb-2">
+                <span class="sidebar-menu-category-text text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase">Platform Tools</span>
+            </div>
+
+            <!-- Activity Logs -->
+            <a href="{{ route('notifications.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('notifications.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="activity" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Activity Logs</span>
+            </a>
+
+            <!-- API Keys -->
+            <a href="{{ route('apikeys.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('apikeys.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="key" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">API Keys</span>
+            </a>
+
+            <!-- Support Tickets -->
+            <a href="{{ route('tickets.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('tickets.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="headset" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Support Tickets</span>
+            </a>
+        </div>
+        @endif
+
         <div class="space-y-1">
             <div class="sidebar-menu-category px-3 mb-2">
                 <span class="sidebar-menu-category-text text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase">Management</span>
@@ -75,11 +149,9 @@
                             request()->routeIs('admin.' . \Illuminate\Support\Str::plural($sModule->slug) . '.*')
                         ) : false;
                         
-                        // Map Bootstrap Icons classes to Lucide icons where possible, fallback to layout-grid
                         $lucideIcon = 'layout-grid';
                         if ($sModule->icon) {
                             $iconName = str_replace('bi-', '', $sModule->icon);
-                            // Mapping common ones
                             if ($iconName === 'box-seam' || $iconName === 'box') {
                                 $lucideIcon = 'package';
                             } elseif ($iconName === 'people' || $iconName === 'person') {
@@ -113,12 +185,6 @@
             <a href="{{ route('module-builder.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('module-builder.*') ? 'active-menu-item !text-white' : '' }}">
                 <i data-lucide="cpu" class="w-5 h-5 shrink-0"></i>
                 <span class="nav-label-text">Module Builder</span>
-            </a>
-
-            <!-- Roles & Permissions -->
-            <a href="{{ route('admin.roles.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('admin.roles.*') ? 'active-menu-item !text-white' : '' }}">
-                <i data-lucide="shield" class="w-5 h-5 shrink-0"></i>
-                <span class="nav-label-text">Roles & Permissions</span>
             </a>
 
             <!-- Configuration -->

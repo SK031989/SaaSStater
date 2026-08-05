@@ -1,0 +1,11 @@
+{
+    "name": "Location",
+    "alias": "location",
+    "description": "Country, State and City management for SaaS multi-tenant platform",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Location\\Providers\\LocationServiceProvider"
+    ],
+    "files": []
+}
