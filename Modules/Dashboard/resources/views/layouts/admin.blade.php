@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Admin Panel') — {{ config('app.name', 'SaaSStater') }}</title>
+    <title>@yield('title', 'Admin Panel') — {{ config('settings.project_name', config('app.name', 'SaaSStater')) }}</title>
 
     {{-- Favicon --}}
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
@@ -35,6 +35,123 @@
     
     <!-- Tailwind CSS (Vite compiled) -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    
+    <style>
+        /* Base Badge Reset */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        /* Light Mode Default Badge Utilities */
+        .badge-emerald, .bg-emerald-50 { background-color: #ecfdf5 !important; color: #047857 !important; border: 1px solid #a7f3d0 !important; }
+        .badge-amber,   .bg-amber-50   { background-color: #fffbeb !important; color: #b45309 !important; border: 1px solid #fde68a !important; }
+        .badge-rose,    .bg-rose-50    { background-color: #fff1f2 !important; color: #be123c !important; border: 1px solid #fecdd3 !important; }
+        .badge-purple,  .bg-purple-50  { background-color: #faf5ff !important; color: #6b21a8 !important; border: 1px solid #e9d5ff !important; }
+        .badge-indigo,  .bg-indigo-50  { background-color: #eef2ff !important; color: #3730a3 !important; border: 1px solid #c7d2fe !important; }
+        .badge-slate,   .bg-slate-100  { background-color: #f1f5f9 !important; color: #334155 !important; border: 1px solid #e2e8f0 !important; }
+
+        /* Dark Mode Badge Overrides */
+        html.dark .badge-emerald, html.dark .bg-emerald-50,
+        .dark .badge-emerald, .dark .bg-emerald-50 {
+            background-color: rgba(16, 185, 129, 0.22) !important;
+            color: #34d399 !important;
+            border: 1px solid rgba(16, 185, 129, 0.4) !important;
+        }
+
+        html.dark .badge-amber, html.dark .bg-amber-50,
+        .dark .badge-amber, .dark .bg-amber-50 {
+            background-color: rgba(245, 158, 11, 0.22) !important;
+            color: #fbbf24 !important;
+            border: 1px solid rgba(245, 158, 11, 0.4) !important;
+        }
+
+        html.dark .badge-rose, html.dark .bg-rose-50,
+        .dark .badge-rose, .dark .bg-rose-50 {
+            background-color: rgba(244, 63, 94, 0.22) !important;
+            color: #f87171 !important;
+            border: 1px solid rgba(244, 63, 94, 0.4) !important;
+        }
+
+        html.dark .badge-purple, html.dark .bg-purple-50,
+        .dark .badge-purple, .dark .bg-purple-50 {
+            background-color: rgba(168, 85, 247, 0.22) !important;
+            color: #c084fc !important;
+            border: 1px solid rgba(168, 85, 247, 0.4) !important;
+        }
+
+        html.dark .badge-indigo, html.dark .bg-indigo-50,
+        .dark .badge-indigo, .dark .bg-indigo-50 {
+            background-color: rgba(99, 102, 241, 0.22) !important;
+            color: #818cf8 !important;
+            border: 1px solid rgba(99, 102, 241, 0.4) !important;
+        }
+
+        html.dark .badge-slate, html.dark .bg-slate-100,
+        .dark .badge-slate, .dark .bg-slate-100 {
+            background-color: rgba(30, 41, 59, 0.85) !important;
+            color: #cbd5e1 !important;
+            border: 1px solid rgba(51, 65, 85, 0.85) !important;
+        }
+
+        .badge.bg-primary, .badge.bg-success, .badge.bg-danger, .badge.bg-dark, .badge.text-white {
+            color: #ffffff !important;
+        }
+
+        /* Dark Mode Dropdown Menu & 3-Dot Button Fixes */
+        html.dark .dropdown-menu, .dark .dropdown-menu {
+            background-color: #0f172a !important;
+            border: 1px solid #1e293b !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.6) !important;
+        }
+
+        html.dark .dropdown-item, .dark .dropdown-item {
+            color: #e2e8f0 !important;
+        }
+
+        html.dark .dropdown-item:hover, html.dark .dropdown-item:focus,
+        .dark .dropdown-item:hover, .dark .dropdown-item:focus {
+            background-color: #1e293b !important;
+            color: #ffffff !important;
+        }
+
+        html.dark .dropdown-divider, .dark .dropdown-divider {
+            border-top-color: #1e293b !important;
+        }
+
+        html.dark .btn-light, .dark .btn-light {
+            background-color: #1e293b !important;
+            border-color: #334155 !important;
+            color: #cbd5e1 !important;
+        }
+
+        html.dark .btn-light:hover, .dark .btn-light:hover {
+            background-color: #334155 !important;
+            color: #ffffff !important;
+        }
+
+        /* Prevent Dropdown Clipping in Table Containers */
+        .table-responsive {
+            overflow: visible !important;
+            min-height: 240px;
+        }
+
+        .card, .card-body {
+            overflow: visible !important;
+        }
+
+        /* Dropdown Menu Elevation & Positioning */
+        .dropdown-menu {
+            z-index: 1050 !important;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        html.dark .dropdown-menu, .dark .dropdown-menu {
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.5) !important;
+        }
+    </style>
     
     <!-- Inline Theme script to prevent flash -->
     <!-- Inline Theme script to prevent flash -->
@@ -72,9 +189,17 @@
         ];
 
         (function() {
-            const theme = localStorage.getItem('admin-theme') || 'light';
-            const isDark = theme === 'dark';
-            if (isDark) {
+            @php
+                $settingsPath = config_path('settings.json');
+                $serverDefaultMode = 'light';
+                if (file_exists($settingsPath)) {
+                    $settingsData = json_decode(file_get_contents($settingsPath), true);
+                    $serverDefaultMode = $settingsData['default_mode'] ?? 'light';
+                }
+            @endphp
+            const serverDefault = @json($serverDefaultMode);
+            const theme = localStorage.getItem('admin-theme') || serverDefault;
+            if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
             } else {
                 document.documentElement.classList.remove('dark');

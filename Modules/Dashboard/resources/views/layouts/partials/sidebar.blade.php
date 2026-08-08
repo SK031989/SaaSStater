@@ -5,7 +5,6 @@
 
 @php
     $isSuperAdmin = auth()->check() && auth()->user()->is_admin;
-    $isAdminUser = auth()->check() && (auth()->user()->is_admin || auth()->user()->hasRole('Tenant Admin'));
 @endphp
 
 <!-- Fixed Left Sidebar -->
@@ -13,7 +12,7 @@
 
     <!-- Brand logo area -->
     <div class="logo-container h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800/60 shrink-0">
-        <a href="{{ $isAdminUser ? route('admin.dashboard') : route('dashboard') }}" class="flex items-center gap-3 no-underline">
+        <a href="{{ $isSuperAdmin ? route('admin.dashboard') : route('dashboard') }}" class="flex items-center gap-3 no-underline">
             <div class="p-2 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 shadow-md">
                 <i data-lucide="{{ config('settings.project_logo', 'shield') }}" class="w-5 h-5 text-white"></i>
             </div>
@@ -29,7 +28,7 @@
             </div>
 
             <!-- Dashboard -->
-            <a href="{{ $isAdminUser ? route('admin.dashboard') : route('dashboard') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ (request()->routeIs('admin.dashboard') || request()->routeIs('dashboard')) ? 'active-menu-item !text-white' : '' }}">
+            <a href="{{ $isSuperAdmin ? route('admin.dashboard') : route('dashboard') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ (request()->routeIs('admin.dashboard') || request()->routeIs('dashboard')) ? 'active-menu-item !text-white' : '' }}">
                 <i data-lucide="layout-dashboard" class="w-5 h-5 shrink-0"></i>
                 <span class="nav-label-text">Dashboard</span>
             </a>
@@ -65,6 +64,12 @@
                 <span class="nav-label-text">Billing</span>
             </a>
 
+            <!-- Payment Gateways -->
+            <a href="{{ route('payments.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('payments.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="wallet" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Payment Gateways</span>
+            </a>
+
             <!-- Addons -->
             <a href="{{ route('addons.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('addons.*') ? 'active-menu-item !text-white' : '' }}">
                 <i data-lucide="puzzle" class="w-5 h-5 shrink-0"></i>
@@ -75,6 +80,12 @@
             <a href="{{ route('coupons.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('coupons.*') ? 'active-menu-item !text-white' : '' }}">
                 <i data-lucide="ticket-percent" class="w-5 h-5 shrink-0"></i>
                 <span class="nav-label-text">Coupons</span>
+            </a>
+
+            <!-- Locations -->
+            <a href="{{ route('locations.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('locations.*') ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="map-pin" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Locations</span>
             </a>
 
             <!-- Roles & Permissions -->
@@ -89,10 +100,10 @@
                 <span class="sidebar-menu-category-text text-xs font-semibold tracking-wider text-slate-400 dark:text-slate-500 uppercase">Platform Tools</span>
             </div>
 
-            <!-- Activity Logs -->
+            <!-- Notifications & Activity Logs -->
             <a href="{{ route('notifications.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('notifications.*') ? 'active-menu-item !text-white' : '' }}">
-                <i data-lucide="activity" class="w-5 h-5 shrink-0"></i>
-                <span class="nav-label-text">Activity Logs</span>
+                <i data-lucide="bell" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Notifications & Logs</span>
             </a>
 
             <!-- API Keys -->
@@ -105,6 +116,12 @@
             <a href="{{ route('tickets.index') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ request()->routeIs('tickets.*') ? 'active-menu-item !text-white' : '' }}">
                 <i data-lucide="headset" class="w-5 h-5 shrink-0"></i>
                 <span class="nav-label-text">Support Tickets</span>
+            </a>
+
+            <!-- Documentation -->
+            <a href="{{ $isSuperAdmin ? route('admin.docs') : route('docs') }}" class="nav-link-item sidebar-nav-hover flex items-center gap-3 px-3 py-2.5 rounded-xl no-underline font-medium text-sm transition-all duration-150 text-slate-700 dark:text-slate-300 {{ (request()->routeIs('admin.docs') || request()->routeIs('docs')) ? 'active-menu-item !text-white' : '' }}">
+                <i data-lucide="book-open" class="w-5 h-5 shrink-0"></i>
+                <span class="nav-label-text">Documentation</span>
             </a>
         </div>
         @endif
@@ -198,13 +215,14 @@
 
     <!-- Sidebar Bottom: User Profile Area -->
     <div class="border-t border-slate-200 dark:border-slate-800 shrink-0">
+        @if(auth()->check())
         <div class="relative">
             <button id="sidebar-profile-btn" class="profile-wrapper w-full h-16 flex items-center justify-between px-6 hover:bg-slate-100 dark:hover:bg-slate-800/40 transition text-left">
                 <div class="flex items-center gap-3">
-                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'Administrator') }}&background=6366f1&color=fff" alt="Avatar" class="accent-avatar w-9 h-9 rounded-xl shadow-inner border border-slate-200 dark:border-slate-700">
+                    <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&background=6366f1&color=fff" alt="Avatar" class="accent-avatar w-9 h-9 rounded-xl shadow-inner border border-slate-200 dark:border-slate-700">
                     <div class="profile-details">
-                        <div class="text-sm font-semibold text-slate-900 dark:text-white truncate max-w-[120px]">{{ auth()->user()->name ?? 'Administrator' }}</div>
-                        <div class="text-xs text-slate-500 dark:text-slate-500 font-medium truncate max-w-[120px]">{{ auth()->user()->roles->first()?->name ?? (auth()->user()->is_admin ? 'Super Admin' : 'User') }}</div>
+                        <div class="text-sm font-semibold text-slate-900 dark:text-white truncate max-w-[120px]">{{ auth()->user()->name ?? 'User' }}</div>
+                        <div class="text-xs text-slate-500 dark:text-slate-500 font-medium truncate max-w-[120px]">{{ auth()->user()?->roles->first()?->name ?? (auth()->user()?->is_admin ? 'Super Admin' : 'User') }}</div>
                     </div>
                 </div>
                 <i data-lucide="chevron-up" class="profile-chevron w-4 h-4 text-slate-400"></i>
@@ -212,11 +230,11 @@
 
             <!-- Sidebar Profile Dropdown -->
             <div id="sidebar-profile-dropdown" class="dropdown-animate hidden-dropdown absolute bottom-full left-0 right-0 z-50 mb-2 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl p-2 space-y-1">
-                <a href="{{ $isAdminUser ? route('admin.profile.edit') : route('auth.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition animate-none">
+                <a href="{{ $isSuperAdmin ? route('admin.profile.edit') : route('auth.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition animate-none">
                     <i data-lucide="user" class="w-4 h-4"></i>
                     <span>My Profile</span>
                 </a>
-                <a href="{{ $isAdminUser ? route('admin.profile.edit') : route('auth.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition">
+                <a href="{{ $isSuperAdmin ? route('admin.profile.edit') : route('auth.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg no-underline transition">
                     <i data-lucide="settings" class="w-4 h-4"></i>
                     <span>Account Settings</span>
                 </a>
@@ -230,6 +248,13 @@
                 </form>
             </div>
         </div>
+        @else
+        <div class="p-4 text-center">
+            <a href="{{ route('auth.login') }}" class="btn btn-primary w-full rounded-xl text-xs font-semibold py-2">
+                <i data-lucide="log-in" class="w-4 h-4 inline me-1"></i> Sign In
+            </a>
+        </div>
+        @endif
     </div>
 
 </aside>

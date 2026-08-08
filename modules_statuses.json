@@ -12,5 +12,7 @@
     "RolePermission": true,
     "Notification": true,
     "ApiKey": true,
-    "Support": true
+    "Support": true,
+    "Location": true,
+    "Payment": true
 }

@@ -33,22 +33,22 @@
                         <tr>
                             <td class="ps-4 font-semibold text-slate-600">#{{ $r->id }}</td>
                             <td>
-                                <span class="badge bg-indigo-50 text-indigo-600 border border-indigo-200 rounded-pill px-3 py-1 font-bold text-sm">
+                                <span class="badge bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/15 dark:text-indigo-300 dark:border-indigo-500/30 rounded-pill px-3 py-1 font-bold text-sm">
                                     {{ $r->role_name }}
                                 </span>
                             </td>
-                            <td class="font-mono text-xs text-slate-600">{{ $r->guard_name }}</td>
+                            <td class="font-mono text-xs text-slate-600 dark:text-slate-300">{{ $r->guard_name }}</td>
                             <td>
                                 @if($r->is_system)
-                                    <span class="badge bg-rose-50 text-rose-600 border border-rose-200 rounded-pill px-3 py-1">Core System</span>
+                                    <span class="badge bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30 rounded-pill px-3 py-1 font-medium">Core System</span>
                                 @else
-                                    <span class="badge bg-slate-100 text-slate-500 border border-slate-200 rounded-pill px-3 py-1">Custom Role</span>
+                                    <span class="badge bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 rounded-pill px-3 py-1 font-medium">Custom Role</span>
                                 @endif
                             </td>
                             <td class="text-xs text-slate-500">{{ Str::limit($r->description ?? 'No description', 50) }}</td>
                             <td class="text-center pe-4">
                                 <div class="dropdown">
-                                    <button class="btn btn-light btn-sm border-0 rounded-circle" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" title="Actions">
+                                    <button class="btn btn-light btn-sm border-0 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">

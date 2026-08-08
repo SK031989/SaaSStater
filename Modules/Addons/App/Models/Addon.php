@@ -20,4 +20,14 @@ class Addon extends Model
     protected $casts = [
         'price_monthly' => 'decimal:2',
     ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    public function getPriceAttribute()
+    {
+        return $this->price_monthly ?? 0;
+    }
 }

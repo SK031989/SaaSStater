@@ -28,4 +28,9 @@ class SubscriptionPlan extends Model
         'is_popular'    => 'boolean',
         'max_users'     => 'integer',
     ];
+
+    public function getPriceAttribute()
+    {
+        return $this->price_monthly;
+    }
 }

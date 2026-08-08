@@ -34,23 +34,23 @@
                         <tr>
                             <td class="ps-4 font-semibold text-slate-600">#{{ $key->id }}</td>
                             <td class="font-bold text-slate-900 dark:text-white">{{ $key->name }}</td>
-                            <td class="font-semibold text-slate-800">{{ $key->tenant->name ?? 'Tenant #'.$key->tenant_id }}</td>
+                            <td class="font-semibold text-slate-800 dark:text-slate-200">{{ $key->tenant->name ?? 'Tenant #'.$key->tenant_id }}</td>
                             <td>
-                                <span class="badge bg-purple-50 text-purple-600 border border-purple-200 rounded-pill px-3 py-1 font-mono text-xs">
+                                <span class="badge bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-500/15 dark:text-purple-300 dark:border-purple-500/30 rounded-pill px-3 py-1 font-mono text-xs">
                                     {{ Str::limit($key->key, 20) }}
                                 </span>
                             </td>
                             <td>
                                 @if($key->status === 'active')
-                                    <span class="badge bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-pill px-3 py-1">Active</span>
+                                    <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 rounded-pill px-3 py-1 font-medium">Active</span>
                                 @else
-                                    <span class="badge bg-rose-50 text-rose-600 border border-rose-200 rounded-pill px-3 py-1">Revoked</span>
+                                    <span class="badge bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30 rounded-pill px-3 py-1 font-medium">Revoked</span>
                                 @endif
                             </td>
                             <td class="text-xs text-slate-500">{{ $key->last_used_at ? $key->last_used_at->diffForHumans() : 'Never' }}</td>
                             <td class="text-center pe-4">
                                 <div class="dropdown">
-                                    <button class="btn btn-light btn-sm border-0 rounded-circle" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" title="Actions">
+                                    <button class="btn btn-light btn-sm border-0 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">

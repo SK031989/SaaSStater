@@ -5,12 +5,6 @@
 @section('content')
 <div class="container-fluid py-4">
     <div class="max-w-4xl mx-auto">
-        @if(session('success'))
-            <div class="mb-4 p-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 rounded-xl flex items-center gap-3 text-sm">
-                <i data-lucide="check-circle" class="w-5 h-5"></i>
-                <span>{{ session('success') }}</span>
-            </div>
-        @endif
 
         <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-6 shadow-sm">
             <div class="flex items-center gap-3 mb-6 border-b border-slate-100 dark:border-slate-800/60 pb-5">
@@ -85,6 +79,17 @@
                             <option value="minimal" {{ $activeTheme === 'minimal' ? 'selected' : '' }}>Minimalist Light</option>
                         </select>
                         @error('theme')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div>
+                        <label for="default_mode" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Default Platform Mode</label>
+                        <select name="default_mode" id="default_mode" class="form-select block w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-slate-850 dark:border-slate-855 dark:text-white">
+                            <option value="light" {{ ($defaultMode ?? 'light') === 'light' ? 'selected' : '' }}>☀️ Light Mode (Default)</option>
+                            <option value="dark" {{ ($defaultMode ?? 'light') === 'dark' ? 'selected' : '' }}>🌙 Dark Mode</option>
+                        </select>
+                        @error('default_mode')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>

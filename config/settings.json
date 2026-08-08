@@ -1,3 +1,7 @@
 {
-    "active_theme": "astral"
+    "active_theme": "obsidian",
+    "project_name": "SaaSStater",
+    "project_logo": "shield",
+    "project_description": "A Software as a Service (SaaS) project description is a clear summary of a cloud-hosted application delivered over the internet on a subscription model",
+    "default_mode": "light"
 }

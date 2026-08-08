@@ -6,13 +6,13 @@
 <div class="container-fluid max-w-4xl">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div class="d-flex items-center gap-3">
-            <a href="{{ route('notifications.index') }}" class="btn btn-sm btn-light rounded-circle p-2">
+            <a href="{{ route('notifications.index', ['tab' => 'logs']) }}" class="btn btn-sm btn-light rounded-circle p-2">
                 <i class="bi bi-arrow-left"></i>
             </a>
-            <h1 class="h3 font-bold text-slate-900 dark:text-white mb-0">Log Details — {{ $log->action }}</h1>
+            <h1 class="h3 font-bold text-slate-900 dark:text-white mb-0">Activity Log — {{ $log->action }}</h1>
         </div>
         <a href="{{ route('notifications.edit', $log->id) }}" class="btn btn-warning text-white rounded-pill px-3">
-            <i class="bi bi-pencil me-1"></i> Edit
+            <i class="bi bi-pencil me-1"></i> Edit Log
         </a>
     </div>
 
@@ -23,6 +23,13 @@
                     <div class="p-3 bg-light rounded-3">
                         <small class="text-slate-500 font-semibold d-block uppercase text-xs mb-1">Action Title</small>
                         <div class="font-bold text-slate-900 fs-5">{{ $log->action }}</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3">
+                        <small class="text-slate-500 font-semibold d-block uppercase text-xs mb-1">Module</small>
+                        <span class="badge bg-slate-200 text-slate-800 font-mono text-sm px-3 py-1 rounded-pill">{{ $log->module ?? 'System' }}</span>
                     </div>
                 </div>
 
@@ -43,8 +50,8 @@
 
                 <div class="col-md-6">
                     <div class="p-3 bg-light rounded-3">
-                        <small class="text-slate-500 font-semibold d-block uppercase text-xs mb-1">User</small>
-                        <div class="font-semibold text-slate-800">{{ $log->user->name ?? 'System Automated Job' }}</div>
+                        <small class="text-slate-500 font-semibold d-block uppercase text-xs mb-1">Triggered By User</small>
+                        <div class="font-semibold text-slate-800">{{ $log->user->name ?? 'System Process' }}</div>
                     </div>
                 </div>
 

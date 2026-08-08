@@ -148,6 +148,11 @@ class User extends Authenticatable implements MustVerifyEmail
     // Relationships
     // -------------------------------------------------------------------------
 
+    public function tenant(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(\Modules\Tenant\App\Models\Tenant::class, 'tenant_id');
+    }
+
     public function loginActivities(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(LoginActivity::class, 'user_id');

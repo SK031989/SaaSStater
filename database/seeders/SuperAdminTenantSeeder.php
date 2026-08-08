@@ -129,7 +129,7 @@ class SuperAdminTenantSeeder extends Seeder
         $modules = [
             'tenants', 'subscriptions', 'entitlements', 'billings',
             'addons', 'coupons', 'rolepermissions', 'notifications',
-            'apikeys', 'tickets', 'users', 'products',
+            'apikeys', 'tickets', 'users', 'products', 'locations', 'payments',
         ];
 
         foreach ($modules as $module) {
@@ -324,6 +324,19 @@ class SuperAdminTenantSeeder extends Seeder
         $this->command->info("   ✔  user@saas.local     → Alpha Demo User  (User role)");
         $this->command->info("   ✔  tenant2@saas.local  → Beta Admin    (Tenant Admin role)");
         $this->command->info("   ✔  pending@saas.local  → Gamma Pending (unverified)");
+
+        // ─────────────────────────────────────────────────────────────
+        // 7. LOCATION MODULE DEMO DATA
+        // ─────────────────────────────────────────────────────────────
+        $this->command->info('');
+        $this->command->info('▶  [7/8] Seeding Location Module Data...');
+        $this->call(\Modules\Location\database\seeders\LocationSeeder::class);
+        $this->command->info('   ✔  Locations seeded for HQ and Client Tenants.');
+
+        $this->command->info('');
+        $this->command->info('▶  [8/8] Seeding Payment Gateways & Transactions...');
+        $this->call(\Modules\Payment\database\seeders\PaymentSeeder::class);
+        $this->command->info('   ✔  Payment Gateways & Transactions seeded.');
 
         // ─────────────────────────────────────────────────────────────
         // SUMMARY

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Welcome') — {{ config('app.name', 'SaaS App') }}</title>
+    <title>@yield('title', 'Authentication') — {{ config('settings.project_name', config('app.name', 'SaaSStater')) }}</title>
 
     {{-- Favicon --}}
     <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
@@ -19,19 +19,17 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         html, body {
-            height: 100%;
+            min-height: 100vh;
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: #0b0f19;
             color: #f8fafc;
-            overflow: hidden; /* NO SCROLL anywhere */
         }
 
         /* ── Full-screen layout ────────────────────────────────── */
         .auth-wrapper {
             display: flex;
-            height: 100vh;
+            min-height: 100vh;
             width: 100vw;
-            overflow: hidden;
         }
 
         /* ── Left Panel ────────────────────────────────────────── */
@@ -43,7 +41,7 @@
             border-right: 1px solid rgba(255,255,255,0.07);
             position: relative;
             overflow: hidden;
-            padding: 2.5rem 2.8rem;
+            padding: 1.75rem 2.25rem;
         }
         @media (min-width: 992px) {
             .auth-left { display: flex; }
@@ -96,45 +94,46 @@
         }
 
         /* Left hero text */
-        .auth-hero { flex-shrink: 0; margin-top: 1.5rem; }
+        .auth-hero { flex-shrink: 0; margin-top: 1rem; }
         .auth-hero h2 {
-            font-size: 1.4rem;
+            font-size: 1.25rem;
             font-weight: 800;
             color: #fff;
-            line-height: 1.3;
-            margin-bottom: .5rem;
+            line-height: 1.25;
+            margin-bottom: .35rem;
         }
         .auth-hero p {
-            font-size: .78rem;
+            font-size: .75rem;
             color: #94a3b8;
-            line-height: 1.6;
-            margin-bottom: 1rem;
+            line-height: 1.5;
+            margin-bottom: .75rem;
         }
 
         /* Feature bullets */
-        .auth-features { flex-shrink: 0; display: flex; flex-direction: column; gap: .55rem; }
+        .auth-features { flex-shrink: 0; display: flex; flex-direction: column; gap: .4rem; }
         .auth-feature-item {
             display: flex;
             align-items: center;
-            gap: .65rem;
-            font-size: .77rem;
+            gap: .55rem;
+            font-size: .75rem;
             color: #94a3b8;
         }
         .auth-feature-icon {
-            width: 30px; height: 30px;
-            border-radius: .5rem;
+            width: 26px; height: 26px;
+            border-radius: .4rem;
             display: flex; align-items: center; justify-content: center;
             flex-shrink: 0;
-            font-size: .85rem;
+            font-size: .8rem;
         }
 
         /* Credentials section on left */
         .auth-credentials {
             flex: 1;
             overflow-y: auto;
-            padding-top: .75rem;
+            padding-top: .5rem;
             scrollbar-width: none; /* Firefox */
         }
+        .auth-credentials::-webkit-scrollbar { display: none; }
         .auth-credentials::-webkit-scrollbar { display: none; }
 
         /* ── Right Panel ───────────────────────────────────────── */
@@ -314,11 +313,29 @@
     {{-- ── LEFT PANEL (Desktop only) ── --}}
     <div class="auth-left">
         <div class="auth-left-inner">
+            @php
+                $logoIcon = config('settings.project_logo', 'shield');
+                $biIcon = match($logoIcon) {
+                    'shield' => 'bi-shield-check',
+                    'box' => 'bi-box-seam',
+                    'cpu' => 'bi-cpu-fill',
+                    'database' => 'bi-database-fill',
+                    'globe' => 'bi-globe',
+                    'heart' => 'bi-heart-fill',
+                    'key' => 'bi-key-fill',
+                    'lock' => 'bi-lock-fill',
+                    'settings' => 'bi-gear-fill',
+                    'activity' => 'bi-activity',
+                    'server' => 'bi-server',
+                    'terminal' => 'bi-terminal-fill',
+                    default => 'bi-shield-check',
+                };
+            @endphp
 
             {{-- Brand --}}
             <a href="/" class="auth-brand">
-                <i class="bi bi-shield-lock-fill"></i>
-                {{ config('app.name', 'SaaSStater') }}
+                <i class="bi {{ $biIcon }}"></i>
+                {{ config('settings.project_name', config('app.name', 'SaaSStater')) }}
             </a>
 
             {{-- Hero --}}
@@ -365,8 +382,8 @@
             {{-- Mobile logo --}}
             <div class="text-center d-lg-none mb-3">
                 <a href="/" class="auth-mobile-logo">
-                    <i class="bi bi-shield-lock-fill"></i>
-                    {{ config('app.name', 'SaaSStater') }}
+                    <i class="bi {{ $biIcon }}"></i>
+                    {{ config('settings.project_name', config('app.name', 'SaaSStater')) }}
                 </a>
             </div>
 

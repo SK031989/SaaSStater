@@ -1,8 +1,26 @@
 <nav class="navbar navbar-expand-lg navbar-dark navbar-mkt sticky-top py-3">
     <div class="container">
+        @php
+            $logoIcon = config('settings.project_logo', 'shield');
+            $biIcon = match($logoIcon) {
+                'shield' => 'bi-shield-check',
+                'box' => 'bi-box-seam',
+                'cpu' => 'bi-cpu-fill',
+                'database' => 'bi-database-fill',
+                'globe' => 'bi-globe',
+                'heart' => 'bi-heart-fill',
+                'key' => 'bi-key-fill',
+                'lock' => 'bi-lock-fill',
+                'settings' => 'bi-gear-fill',
+                'activity' => 'bi-activity',
+                'server' => 'bi-server',
+                'terminal' => 'bi-terminal-fill',
+                default => 'bi-shield-check',
+            };
+        @endphp
         <a class="navbar-brand fw-bold fs-4 d-flex align-items-center gap-2" href="{{ route('marketing.index') }}">
-            <i class="bi bi-moon-stars-fill text-primary"></i>
-            <span>{{ config('app.name') }}</span>
+            <i class="bi {{ $biIcon }} text-primary"></i>
+            <span>{{ config('settings.project_name', config('app.name', 'SaaSStater')) }}</span>
         </a>
         
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mktNavbar">
@@ -51,8 +69,7 @@
                         </ul>
                     </li>
                 @else
-                    <li class="nav-item ms-lg-2"><a href="{{ route('auth.login') }}" class="nav-link nav-link-mkt">Log In</a></li>
-                    <li class="nav-item"><a href="{{ route('auth.register') }}" class="btn btn-sm btn-mkt-primary">Register</a></li>
+                    <li class="nav-item ms-lg-2"><a href="{{ route('auth.login') }}" class="btn btn-sm btn-mkt-primary px-4">Log In</a></li>
                 @endauth
             </ul>
         </div>

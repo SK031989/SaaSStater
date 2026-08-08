@@ -12,41 +12,42 @@ class NotificationApiController extends Controller
 
     public function index()
     {
-        return response()->json($this->notificationService->getAll());
+        return response()->json([
+            'notifications' => $this->notificationService->getAllNotifications(),
+            'activity_logs' => $this->notificationService->getAllActivityLogs(),
+            'templates'     => $this->notificationService->getAllTemplates(),
+            'settings'      => $this->notificationService->getSettingsForUser(),
+        ]);
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'log_type' => 'required|string|max:50',
-            'action'   => 'required|string|max:255',
+            'title'   => 'required|string|max:255',
+            'message' => 'required|string',
+            'type'    => 'nullable|string|max:50',
         ]);
 
-        $log = $this->notificationService->create($validated);
-        return response()->json(['message' => 'Log recorded successfully', 'data' => $log], 201);
+        $notification = $this->notificationService->createNotification($validated);
+        return response()->json(['message' => 'Notification created successfully', 'data' => $notification], 201);
     }
 
     public function show($id)
     {
-        return response()->json($this->notificationService->findById($id));
+        return response()->json($this->notificationService->findNotificationById($id));
     }
 
-    public function update(Request $request, $id)
+    public function markRead($id)
     {
-        $log = $this->notificationService->findById($id);
-        $validated = $request->validate([
-            'log_type' => 'required|string|max:50',
-            'action'   => 'required|string|max:255',
-        ]);
-
-        $log = $this->notificationService->update($log, $validated);
-        return response()->json(['message' => 'Log updated successfully', 'data' => $log]);
+        $notification = $this->notificationService->findNotificationById($id);
+        $updated = $this->notificationService->markAsRead($notification);
+        return response()->json(['message' => 'Notification marked as read', 'data' => $updated]);
     }
 
     public function destroy($id)
     {
-        $log = $this->notificationService->findById($id);
-        $this->notificationService->delete($log);
-        return response()->json(['message' => 'Log deleted successfully']);
+        $notification = $this->notificationService->findNotificationById($id);
+        $this->notificationService->deleteNotification($notification);
+        return response()->json(['message' => 'Notification deleted successfully']);
     }
 }

@@ -1,0 +1,11 @@
+{
+    "name": "Payment",
+    "alias": "payment",
+    "description": "Multi-Gateway Payment Integration & Transaction Logs for SaaS Platform",
+    "keywords": ["payment", "gateway", "stripe", "paypal", "razorpay"],
+    "priority": 0,
+    "providers": [
+        "Modules\\Payment\\Providers\\PaymentServiceProvider"
+    ],
+    "files": []
+}

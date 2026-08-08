@@ -52,6 +52,7 @@ return [
     */
     'pricing' => [
         [
+            'plan_id'     => 1,
             'name'        => 'Free Starter',
             'price'       => '0',
             'period'      => 'month',
@@ -62,11 +63,12 @@ return [
                 'Local SQLite Database support',
                 'Standard community forum access',
             ],
-            'button'      => 'Get Started',
+            'button'      => 'Get Started Free',
             'route'       => 'auth.register',
             'popular'     => false,
         ],
         [
+            'plan_id'     => 2,
             'name'        => 'Growth Pro',
             'price'       => '29',
             'period'      => 'month',
@@ -78,13 +80,14 @@ return [
                 'Advanced 2FA Account protection',
                 'Email and Slack priority support',
             ],
-            'button'      => 'Start 14-Day Free Trial',
+            'button'      => 'Subscribe & Onboard',
             'route'       => 'auth.register',
             'popular'     => true,
         ],
         [
+            'plan_id'     => 3,
             'name'        => 'Enterprise Scale',
-            'price'       => '149',
+            'price'       => '99',
             'period'      => 'month',
             'description' => 'Custom modules, robust safety features, scaling infrastructure.',
             'features'    => [
@@ -94,8 +97,8 @@ return [
                 'Custom SSO / SAML integration',
                 '24/7 Phone & video call support',
             ],
-            'button'      => 'Contact Sales',
-            'route'       => 'marketing.contact',
+            'button'      => 'Get Enterprise',
+            'route'       => 'auth.register',
             'popular'     => false,
         ],
     ],

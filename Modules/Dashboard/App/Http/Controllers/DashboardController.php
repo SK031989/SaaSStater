@@ -229,12 +229,21 @@ class DashboardController extends Controller
     }
 
     /**
+     * Standalone HRMS Documentation page.
+     */
+    public function docs(): View
+    {
+        return view('dashboard::pages.docs');
+    }
+
+    /**
      * Show general settings.
      */
     public function settings(): View
     {
         $settingsPath = config_path('settings.json');
         $activeTheme = 'obsidian';
+        $defaultMode = 'light';
         $projectName = 'SaaSStater';
         $projectLogo = 'shield';
         $projectDescription = '';
@@ -242,12 +251,13 @@ class DashboardController extends Controller
         if (file_exists($settingsPath)) {
             $settings = json_decode(file_get_contents($settingsPath), true);
             $activeTheme = $settings['active_theme'] ?? 'obsidian';
+            $defaultMode = $settings['default_mode'] ?? 'light';
             $projectName = $settings['project_name'] ?? 'SaaSStater';
             $projectLogo = $settings['project_logo'] ?? 'shield';
             $projectDescription = $settings['project_description'] ?? '';
         }
 
-        return view('dashboard::settings', compact('activeTheme', 'projectName', 'projectLogo', 'projectDescription'));
+        return view('dashboard::settings', compact('activeTheme', 'defaultMode', 'projectName', 'projectLogo', 'projectDescription'));
     }
 
     /**
@@ -257,6 +267,7 @@ class DashboardController extends Controller
     {
         $request->validate([
             'theme' => 'required|string|in:obsidian,cyber,astral,minimal',
+            'default_mode' => 'required|string|in:light,dark',
             'project_name' => 'required|string|max:50',
             'project_logo' => 'required|string|max:50',
             'project_description' => 'nullable|string|max:500',
@@ -269,6 +280,7 @@ class DashboardController extends Controller
         }
 
         $settings['active_theme'] = $request->input('theme');
+        $settings['default_mode'] = $request->input('default_mode');
         $settings['project_name'] = $request->input('project_name');
         $settings['project_logo'] = $request->input('project_logo');
         $settings['project_description'] = $request->input('project_description');

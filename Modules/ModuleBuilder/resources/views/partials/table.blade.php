@@ -31,18 +31,20 @@
                 </td>
                 <td><code>{{ $module->slug }}</code></td>
                 <td>
-                    <span class="badge bg-light text-dark border">{{ $module->fields->count() }} fields</span>
+                    <span class="badge bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 rounded-pill px-3 py-1 font-medium">{{ $module->fields->count() }} fields</span>
                 </td>
                 <td>
-                    <span class="badge bg-{{ $module->status === 'active' ? 'success' : 'secondary' }}">
-                        {{ ucfirst($module->status) }}
-                    </span>
+                    @if($module->status === 'active')
+                        <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 rounded-pill px-3 py-1 font-medium">Active</span>
+                    @else
+                        <span class="badge bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 rounded-pill px-3 py-1 font-medium">Inactive</span>
+                    @endif
                 </td>
                 <td>
                     @if($module->is_generated)
-                        <span class="badge bg-success"><i class="bi bi-check-lg me-1"></i>Done</span>
+                        <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 rounded-pill px-3 py-1 font-medium"><i class="bi bi-check-lg me-1"></i>Done</span>
                     @else
-                        <span class="badge bg-warning text-dark"><i class="bi bi-hourglass me-1"></i>Pending</span>
+                        <span class="badge bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30 rounded-pill px-3 py-1 font-medium"><i class="bi bi-hourglass me-1"></i>Pending</span>
                     @endif
                 </td>
                 <td class="text-muted small">{{ $module->created_at?->format('d M Y') }}</td>

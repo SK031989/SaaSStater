@@ -14,34 +14,57 @@ class RegisterController extends Controller
     public function __construct(protected RegistrationService $registrationService) {}
 
     /**
-     * Show the registration form.
+     * Show the registration checkout form.
      */
-    public function showRegistrationForm(): View|RedirectResponse
+    public function showRegistrationForm(Request $request): View|RedirectResponse
     {
         if (auth()->check()) {
-            return redirect(config('auth-module.redirects.register', '/dashboard'));
+            return redirect(auth()->user()->is_admin ? route('admin.dashboard') : route('dashboard'));
         }
 
-        return view('auth-module::register');
+        $plans = \Modules\Subscription\App\Models\SubscriptionPlan::all();
+        $selectedPlanId = $request->input('plan_id', 2);
+        $selectedPlan = $plans->where('id', $selectedPlanId)->first() ?? $plans->first();
+        $gateways = \Modules\Payment\App\Models\PaymentGateway::active()->get();
+        $addons = \Modules\Addons\App\Models\Addon::active()->get();
+
+        $settingsPath = config_path('settings.json');
+        $activeTheme = config('marketing.default_theme', 'obsidian');
+        if (file_exists($settingsPath)) {
+            $settings = json_decode(file_get_contents($settingsPath), true);
+            $activeTheme = $settings['active_theme'] ?? $activeTheme;
+        }
+
+        $viewName = "themes.{$activeTheme}.pages.checkout";
+        if (!view()->exists($viewName)) {
+            $viewName = 'auth-module::register';
+        }
+
+        return view($viewName, compact('plans', 'selectedPlan', 'gateways', 'addons'));
     }
 
     /**
-     * Handle registration form submission.
+     * Handle registration checkout form submission.
      */
-    public function register(RegisterRequest $request): RedirectResponse
+    public function register(Request $request): RedirectResponse
     {
-        $user = $this->registrationService->register($request->validated());
+        $request->validate([
+            'name'         => 'required|string|max:255',
+            'email'        => 'required|string|email|max:255|unique:users,email',
+            'company_name' => 'required|string|max:255',
+            'subdomain'    => 'required|string|max:50|alpha_dash|unique:tenants,subdomain',
+            'password'     => 'required|string|min:8|confirmed',
+            'plan_id'      => 'required|exists:subscription_plans,id',
+            'gateway_id'   => 'required|exists:payment_gateways,id',
+        ]);
 
-        // Auto-login after registration
-        if (config('auth-module.registration.auto_login', true)) {
-            auth()->login($user);
-        }
+        $user = $this->registrationService->registerTenantCheckout($request->all());
 
-        $redirect = config('auth-module.registration.email_verification', true)
-            ? route('auth.verify.notice')
-            : config('auth-module.redirects.register', '/dashboard');
+        auth()->login($user);
 
-        return redirect($redirect)
-            ->with('success', 'Your account has been created successfully! Welcome aboard.');
+        $companyName = $user->tenant?->name ?? $request->input('company_name', 'Organization');
+
+        return redirect()->route('dashboard')
+            ->with('success', "🎉 Welcome to SaaSStater! Your organization '{$companyName}' has been successfully onboarded.");
     }
 }

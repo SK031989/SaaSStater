@@ -10,10 +10,16 @@ class NotificationController extends Controller
 {
     public function __construct(protected NotificationService $notificationService) {}
 
-    public function index()
+    public function index(Request $request)
     {
-        $logs = $this->notificationService->getAll();
-        return view('Notification::index', compact('logs'));
+        $tab = $request->get('tab', 'notifications');
+
+        $notifications = $this->notificationService->getAllNotifications();
+        $logs          = $this->notificationService->getAllActivityLogs();
+        $templates     = $this->notificationService->getAllTemplates();
+        $settings      = $this->notificationService->getSettingsForUser();
+
+        return view('Notification::index', compact('tab', 'notifications', 'logs', 'templates', 'settings'));
     }
 
     public function create()
@@ -24,31 +30,46 @@ class NotificationController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'log_type'    => 'required|string|max:50',
-            'action'      => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'title'      => 'required|string|max:255',
+            'message'    => 'required|string',
+            'type'       => 'required|string|max:50',
+            'action_url' => 'nullable|string|max:255',
         ]);
 
-        $this->notificationService->create($validated);
+        $this->notificationService->createNotification($validated);
 
-        return redirect()->route('notifications.index')->with('success', 'Activity log recorded successfully.');
+        return redirect()->route('notifications.index', ['tab' => 'notifications'])->with('success', 'Notification created successfully.');
+    }
+
+    public function markAsRead($id)
+    {
+        $notification = $this->notificationService->findNotificationById($id);
+        $this->notificationService->markAsRead($notification);
+
+        return redirect()->back()->with('success', 'Notification marked as read.');
     }
 
     public function show($id)
     {
-        $log = $this->notificationService->findById($id);
+        $log = $this->notificationService->findActivityLogById($id);
         return view('Notification::show', compact('log'));
+    }
+
+    public function showNotification($id)
+    {
+        $notification = $this->notificationService->findNotificationById($id);
+        return view('Notification::show_notification', compact('notification'));
     }
 
     public function edit($id)
     {
-        $log = $this->notificationService->findById($id);
+        $log = $this->notificationService->findActivityLogById($id);
         return view('Notification::edit', compact('log'));
     }
 
     public function update(Request $request, $id)
     {
-        $log = $this->notificationService->findById($id);
+        $log = $this->notificationService->findActivityLogById($id);
 
         $validated = $request->validate([
             'log_type'    => 'required|string|max:50',
@@ -56,16 +77,24 @@ class NotificationController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $this->notificationService->update($log, $validated);
+        $this->notificationService->updateActivityLog($log, $validated);
 
-        return redirect()->route('notifications.index')->with('success', 'Activity log updated successfully.');
+        return redirect()->route('notifications.index', ['tab' => 'logs'])->with('success', 'Activity log updated successfully.');
     }
 
     public function destroy($id)
     {
-        $log = $this->notificationService->findById($id);
-        $this->notificationService->delete($log);
+        $notification = $this->notificationService->findNotificationById($id);
+        $this->notificationService->deleteNotification($notification);
 
-        return redirect()->route('notifications.index')->with('success', 'Activity log deleted successfully.');
+        return redirect()->route('notifications.index', ['tab' => 'notifications'])->with('success', 'Notification deleted successfully.');
+    }
+
+    public function updateSettings(Request $request)
+    {
+        $settings = $this->notificationService->getSettingsForUser();
+        $this->notificationService->updateSettings($settings, $request->all());
+
+        return redirect()->route('notifications.index', ['tab' => 'settings'])->with('success', 'Notification settings updated successfully.');
     }
 }

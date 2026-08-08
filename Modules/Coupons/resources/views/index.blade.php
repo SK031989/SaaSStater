@@ -35,12 +35,12 @@
                         <tr>
                             <td class="ps-4 font-semibold text-slate-600">#{{ $coupon->id }}</td>
                             <td>
-                                <span class="badge bg-purple-50 text-purple-600 border border-purple-200 rounded-pill px-3 py-1 font-mono font-bold text-sm">
+                                <span class="badge bg-purple-50 text-purple-700 border border-purple-200 dark:bg-purple-500/15 dark:text-purple-300 dark:border-purple-500/30 rounded-pill px-3 py-1 font-mono font-bold text-sm">
                                     {{ $coupon->code }}
                                 </span>
                             </td>
-                            <td class="font-semibold text-slate-800">{{ ucfirst($coupon->type) }}</td>
-                            <td class="font-bold text-slate-900">
+                            <td class="font-semibold text-slate-800 dark:text-slate-200">{{ ucfirst($coupon->type) }}</td>
+                            <td class="font-bold text-slate-900 dark:text-white">
                                 @if($coupon->type === 'percentage')
                                     {{ number_format($coupon->value, 0) }}% OFF
                                 @else
@@ -48,24 +48,24 @@
                                 @endif
                             </td>
                             <td>
-                                <div class="font-semibold text-slate-700 text-xs mb-1">{{ $coupon->used_count }} / {{ $coupon->max_uses }} Uses</div>
+                                <div class="font-semibold text-slate-700 dark:text-slate-300 text-xs mb-1">{{ $coupon->used_count }} / {{ $coupon->max_uses }} Uses</div>
                                 <div class="progress" style="height: 6px; width: 100px;">
                                     <div class="progress-bar bg-purple-500" role="progressbar" style="width: {{ min(100, ($coupon->used_count / max(1, $coupon->max_uses)) * 100) }}%"></div>
                                 </div>
                             </td>
                             <td>
                                 @if($coupon->status === 'active')
-                                    <span class="badge bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-pill px-3 py-1">Active</span>
+                                    <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 rounded-pill px-3 py-1 font-medium">Active</span>
                                 @elseif($coupon->status === 'expired')
-                                    <span class="badge bg-amber-50 text-amber-600 border border-amber-200 rounded-pill px-3 py-1">Expired</span>
+                                    <span class="badge bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30 rounded-pill px-3 py-1 font-medium">Expired</span>
                                 @else
-                                    <span class="badge bg-slate-100 text-slate-500 border border-slate-200 rounded-pill px-3 py-1">Disabled</span>
+                                    <span class="badge bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30 rounded-pill px-3 py-1 font-medium">Inactive</span>
                                 @endif
                             </td>
                             <td class="text-xs text-slate-500">{{ $coupon->expires_at ? $coupon->expires_at->format('M d, Y') : 'Never' }}</td>
                             <td class="text-center pe-4">
                                 <div class="dropdown">
-                                    <button class="btn btn-light btn-sm border-0 rounded-circle" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" title="Actions">
+                                    <button class="btn btn-light btn-sm border-0 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">

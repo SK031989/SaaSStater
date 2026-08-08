@@ -20,6 +20,7 @@ use Modules\Auth\App\Http\Controllers\AdminLoginController;
 Route::middleware('web')->group(function () {
 
     // ── Tenant Authentication (Frontend) ──────────────────────────────────
+    Route::get('/login',   [LoginController::class, 'showLoginForm'])->name('login');
     Route::get('/login',   [LoginController::class, 'showLoginForm'])->name('auth.login');
     Route::post('/login',  [LoginController::class, 'login'])->name('auth.login.store');
     Route::get('/auth/login', fn() => redirect()->route('auth.login')); // Legacy redirect
@@ -46,11 +47,16 @@ Route::middleware('web')->group(function () {
 
     // ── Email Verification ────────────────────────────────────────────────
     Route::middleware('auth')->group(function () {
-        Route::get('/auth/verify-email',       [VerificationController::class, 'showNotice'])->name('auth.verify.notice');
+        Route::get('/auth/verify-email', [VerificationController::class, 'showNotice'])->name('verification.notice');
         Route::get('/auth/verify-email/{id}/{hash}', [VerificationController::class, 'verify'])
-            ->middleware(['signed', 'throttle:6,1'])->name('auth.verify.verify');
+            ->middleware(['signed', 'throttle:6,1'])->name('verification.verify');
         Route::post('/auth/email/verification-notification', [VerificationController::class, 'resend'])
-            ->middleware('throttle:6,1')->name('auth.verify.resend');
+            ->middleware('throttle:6,1')->name('verification.send');
+
+        // Aliases for compatibility
+        Route::get('/auth/verify-email-notice', [VerificationController::class, 'showNotice'])->name('auth.verify.notice');
+        Route::get('/auth/verify-email-verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('auth.verify.verify');
+        Route::post('/auth/email/verification-resend', [VerificationController::class, 'resend'])->name('auth.verify.resend');
     });
 
     // ── Profile Settings (Auth Required) ──────────────────────────────────

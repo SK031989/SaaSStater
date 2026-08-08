@@ -190,23 +190,24 @@
             </div>
         </div>
 
-        <!-- User Profile Dropdown -->
+        <!-- User Profile Dropdown / Sign In -->
+        @if(auth()->check())
         <div class="relative ml-2 pl-3 border-l border-slate-200 dark:border-slate-800">
             <button id="topbar-avatar-btn" class="flex items-center gap-2 p-1 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition">
-                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'Administrator') }}&background=6366f1&color=fff" class="accent-avatar rounded-xl w-8 h-8 object-cover border border-slate-200 dark:border-slate-700">
+                <img src="https://ui-avatars.com/api/?name={{ urlencode(auth()->user()->name ?? 'User') }}&background=6366f1&color=fff" class="accent-avatar rounded-xl w-8 h-8 object-cover border border-slate-200 dark:border-slate-700">
                 <div class="hidden sm:flex flex-col text-left pr-1">
-                    <span class="text-sm font-semibold text-slate-700 dark:text-slate-300 leading-none">{{ auth()->user()->name ?? 'Admin' }}</span>
-                    <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-1 leading-none">{{ auth()->user()->roles->first()?->name ?? (auth()->user()->is_admin ? 'Super Admin' : 'User') }}</span>
+                    <span class="text-sm font-semibold text-slate-700 dark:text-slate-300 leading-none">{{ auth()->user()->name ?? 'User' }}</span>
+                    <span class="text-[10px] text-slate-400 dark:text-slate-500 font-medium mt-1 leading-none">{{ auth()->user()?->roles->first()?->name ?? (auth()->user()?->is_admin ? 'Super Admin' : 'User') }}</span>
                 </div>
                 <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400"></i>
             </button>
 
             <div id="topbar-avatar-dropdown" class="dropdown-animate hidden-dropdown absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xl p-2 space-y-1">
-                <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg no-underline transition">
+                <a href="{{ auth()->user()?->is_admin ? route('admin.profile.edit') : route('auth.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg no-underline transition">
                     <i data-lucide="user" class="w-4 h-4"></i>
                     <span>My Profile</span>
                 </a>
-                <a href="{{ route('admin.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg no-underline transition">
+                <a href="{{ auth()->user()?->is_admin ? route('admin.profile.edit') : route('auth.profile.edit') }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg no-underline transition">
                     <i data-lucide="settings" class="w-4 h-4"></i>
                     <span>Account Settings</span>
                 </a>
@@ -220,6 +221,13 @@
                 </form>
             </div>
         </div>
+        @else
+        <div class="ml-2 pl-3 border-l border-slate-200 dark:border-slate-800">
+            <a href="{{ route('auth.login') }}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-semibold no-underline transition shadow-sm">
+                <i data-lucide="log-in" class="w-4 h-4 inline me-1"></i> Sign In
+            </a>
+        </div>
+        @endif
 
     </div>
 </header>

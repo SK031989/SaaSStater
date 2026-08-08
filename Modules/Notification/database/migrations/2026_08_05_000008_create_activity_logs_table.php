@@ -13,11 +13,16 @@ return new class extends Migration
                 $table->id();
                 $table->unsignedBigInteger('user_id')->nullable();
                 $table->unsignedBigInteger('tenant_id')->default(1);
+                $table->string('module', 50)->default('System');
                 $table->string('log_type', 50)->default('info');
                 $table->string('action');
                 $table->text('description')->nullable();
                 $table->string('ip_address', 45)->nullable();
                 $table->timestamps();
+            });
+        } elseif (!Schema::hasColumn('activity_logs', 'module')) {
+            Schema::table('activity_logs', function (Blueprint $table) {
+                $table->string('module', 50)->default('System')->after('tenant_id');
             });
         }
     }

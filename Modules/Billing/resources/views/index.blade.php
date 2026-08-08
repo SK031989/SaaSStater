@@ -38,22 +38,22 @@
                                 <div class="font-semibold text-slate-900 dark:text-white">{{ $invoice->tenant->name ?? 'Tenant #'.$invoice->tenant_id }}</div>
                                 <div class="text-xs text-slate-500">{{ $invoice->tenant->subdomain ?? '' }}.saas.local</div>
                             </td>
-                            <td class="font-bold text-slate-900">${{ number_format($invoice->amount, 2) }}</td>
-                            <td class="font-mono text-xs text-slate-600">{{ $invoice->currency }}</td>
+                            <td class="font-bold text-slate-900 dark:text-white">${{ number_format($invoice->amount, 2) }}</td>
+                            <td class="font-mono text-xs text-slate-600 dark:text-slate-400">{{ $invoice->currency }}</td>
                             <td>
                                 @if($invoice->status === 'paid')
-                                    <span class="badge bg-emerald-50 text-emerald-600 border border-emerald-200 rounded-pill px-3 py-1">Paid</span>
+                                    <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 rounded-pill px-3 py-1 font-medium">Paid</span>
                                 @elseif($invoice->status === 'pending')
-                                    <span class="badge bg-amber-50 text-amber-600 border border-amber-200 rounded-pill px-3 py-1">Pending</span>
+                                    <span class="badge bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30 rounded-pill px-3 py-1 font-medium">Pending</span>
                                 @else
-                                    <span class="badge bg-rose-50 text-rose-600 border border-rose-200 rounded-pill px-3 py-1">{{ ucfirst($invoice->status) }}</span>
+                                    <span class="badge bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30 rounded-pill px-3 py-1 font-medium">{{ ucfirst($invoice->status) }}</span>
                                 @endif
                             </td>
                             <td class="text-xs text-slate-500">{{ $invoice->due_date ? $invoice->due_date->format('M d, Y') : 'N/A' }}</td>
                             <td class="text-xs text-slate-500">{{ $invoice->paid_at ? $invoice->paid_at->format('M d, Y') : 'Unpaid' }}</td>
                             <td class="text-center pe-4">
                                 <div class="dropdown">
-                                    <button class="btn btn-light btn-sm border-0 rounded-circle" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" title="Actions">
+                                    <button class="btn btn-light btn-sm border-0 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">

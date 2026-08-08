@@ -14,9 +14,6 @@
         </a>
     </div>
 
-    @if(session('success'))
-        <div class="alert alert-success border-0 rounded-3 mb-4">{{ session('success') }}</div>
-    @endif
 
     <div class="card border-0 shadow-sm rounded-4">
         <div class="card-body p-0">
@@ -38,19 +35,33 @@
                         <tr>
                             <td class="ps-4 font-mono font-semibold text-purple-600">{{ $ticket->ticket_number }}</td>
                             <td class="font-bold text-slate-900 dark:text-white">{{ Str::limit($ticket->subject, 45) }}</td>
-                            <td class="text-slate-600">{{ $ticket->tenant->name ?? 'N/A' }}</td>
+                            <td class="text-slate-600 dark:text-slate-300">{{ $ticket->tenant->name ?? 'N/A' }}</td>
                             <td>
-                                @php $pc = ['low'=>'secondary','medium'=>'info','high'=>'warning','urgent'=>'danger'][$ticket->priority] ?? 'secondary' @endphp
-                                <span class="badge bg-{{ $pc }}-subtle text-{{ $pc }}-emphasis rounded-pill px-3">{{ ucfirst($ticket->priority) }}</span>
+                                @if($ticket->priority === 'urgent')
+                                    <span class="badge bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-500/15 dark:text-rose-300 dark:border-rose-500/30 rounded-pill px-3 py-1 font-medium">Urgent</span>
+                                @elseif($ticket->priority === 'high')
+                                    <span class="badge bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30 rounded-pill px-3 py-1 font-medium">High</span>
+                                @elseif($ticket->priority === 'medium')
+                                    <span class="badge bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/15 dark:text-indigo-300 dark:border-indigo-500/30 rounded-pill px-3 py-1 font-medium">Medium</span>
+                                @else
+                                    <span class="badge bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 rounded-pill px-3 py-1 font-medium">Low</span>
+                                @endif
                             </td>
                             <td>
-                                @php $sc = ['open'=>'primary','in_progress'=>'warning','resolved'=>'success','closed'=>'secondary'][$ticket->status] ?? 'secondary' @endphp
-                                <span class="badge bg-{{ $sc }}-subtle text-{{ $sc }}-emphasis rounded-pill px-3">{{ ucwords(str_replace('_',' ',$ticket->status)) }}</span>
+                                @if($ticket->status === 'resolved')
+                                    <span class="badge bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30 rounded-pill px-3 py-1 font-medium">Resolved</span>
+                                @elseif($ticket->status === 'in_progress')
+                                    <span class="badge bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30 rounded-pill px-3 py-1 font-medium">In Progress</span>
+                                @elseif($ticket->status === 'open')
+                                    <span class="badge bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-indigo-500/15 dark:text-indigo-300 dark:border-indigo-500/30 rounded-pill px-3 py-1 font-medium">Open</span>
+                                @else
+                                    <span class="badge bg-slate-100 text-slate-700 border border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700 rounded-pill px-3 py-1 font-medium">Closed</span>
+                                @endif
                             </td>
                             <td class="text-xs text-slate-500">{{ $ticket->created_at?->format('M d, Y') }}</td>
                             <td class="text-center pe-4">
                                 <div class="dropdown">
-                                    <button class="btn btn-light btn-sm border-0 rounded-circle" type="button" data-bs-toggle="dropdown" data-bs-display="static">
+                                    <button class="btn btn-light btn-sm border-0 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">

@@ -24,6 +24,7 @@ Route::middleware(['web', EnsureUserIsAdmin::class])->group(function () {
 
     // User Role assignment
     Route::put('/admin/users/{user}/role', [DashboardController::class, 'updateUserRole'])->name('admin.users.role.update');
+    Route::get('/admin/docs',             [DashboardController::class, 'docs'])->name('admin.docs');
 });
 
 Route::middleware(['web', 'auth'])->group(function () {
@@ -32,3 +33,8 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('/terms-of-service', [DashboardController::class, 'termsOfService'])->name('terms-of-service');
     Route::get('/support',          [DashboardController::class, 'support'])->name('support');
 });
+
+Route::middleware('web')->group(function () {
+    Route::get('/docs', [DashboardController::class, 'docs'])->name('docs');
+});
+

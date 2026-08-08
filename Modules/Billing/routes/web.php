@@ -4,6 +4,11 @@ use Illuminate\Support\Facades\Route;
 use Modules\Billing\App\Http\Controllers\BillingController;
 use Modules\Dashboard\App\Http\Middleware\EnsureUserIsAdmin;
 
+Route::middleware(['web', 'auth'])->group(function () {
+    Route::get('/checkout', [BillingController::class, 'checkout'])->name('checkout');
+    Route::post('/checkout', [BillingController::class, 'processCheckout'])->name('checkout.process');
+});
+
 Route::middleware(['web', EnsureUserIsAdmin::class])
     ->prefix('admin/billings')
     ->name('billings.')

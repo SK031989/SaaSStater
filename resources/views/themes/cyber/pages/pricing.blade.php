@@ -46,8 +46,8 @@
                                 @endforeach
                             </ul>
 
-                            <a href="{{ Route::has($plan['route']) ? route($plan['route']) : '#' }}" 
-                               class="btn {{ $plan['popular'] ? 'btn-mkt-primary' : 'btn-mkt-outline' }} w-100 py-3">
+                            <a href="{{ route('auth.register', ['plan_id' => $plan['plan_id'] ?? $loop->iteration]) }}" 
+                               class="btn {{ $plan['popular'] ? 'btn-mkt-primary' : 'btn-mkt-outline' }} w-100 py-3 font-semibold">
                                 {{ $plan['button'] }}
                             </a>
                         </div>

@@ -38,18 +38,18 @@
                                 <div class="text-xs text-slate-500">{{ $tenant->company_name ?? '—' }}</div>
                             </td>
                             <td>
-                                <span class="badge bg-purple-50 text-purple-600 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800 rounded-pill px-3 py-1 font-mono">
+                                <span class="badge badge-purple rounded-pill px-3 py-1 font-mono">
                                     {{ $tenant->subdomain }}.saas.local
                                 </span>
                             </td>
                             <td class="text-slate-700 dark:text-slate-300">{{ $tenant->email }}</td>
                             <td>
                                 @if($tenant->status === 'active')
-                                    <span class="badge bg-emerald-50 text-emerald-600 dark:bg-emerald-950/30 border border-emerald-200 rounded-pill px-3 py-1">Active</span>
+                                    <span class="badge badge-emerald rounded-pill px-3 py-1 font-medium">Active</span>
                                 @elseif($tenant->status === 'suspended')
-                                    <span class="badge bg-rose-50 text-rose-600 dark:bg-rose-950/30 border border-rose-200 rounded-pill px-3 py-1">Suspended</span>
+                                    <span class="badge badge-rose rounded-pill px-3 py-1 font-medium">Suspended</span>
                                 @else
-                                    <span class="badge bg-amber-50 text-amber-600 dark:bg-amber-950/30 border border-amber-200 rounded-pill px-3 py-1">Pending</span>
+                                    <span class="badge badge-amber rounded-pill px-3 py-1 font-medium">Pending</span>
                                 @endif
                             </td>
                             <td class="text-xs text-slate-500">
@@ -57,7 +57,7 @@
                             </td>
                             <td class="text-center pe-4">
                                 <div class="dropdown">
-                                    <button class="btn btn-light btn-sm border-0 rounded-circle" type="button" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false" title="Actions">
+                                    <button class="btn btn-light btn-sm border-0 rounded-circle" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Actions">
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 p-2">
