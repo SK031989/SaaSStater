@@ -22,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
         $settingsPath = config_path('settings.json');
         $projectName = 'SaaSStater';
         $projectLogo = 'shield';
+        $projectLogoImage = '';
         $activeTheme = 'obsidian';
         $projectDescription = '';
 
@@ -29,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
             $settings = json_decode(file_get_contents($settingsPath), true);
             $projectName = $settings['project_name'] ?? $projectName;
             $projectLogo = $settings['project_logo'] ?? $projectLogo;
+            $projectLogoImage = $settings['project_logo_image'] ?? $projectLogoImage;
             $activeTheme = $settings['active_theme'] ?? $activeTheme;
             $projectDescription = $settings['project_description'] ?? $projectDescription;
         }
@@ -37,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
             'app.name' => $projectName,
             'settings.project_name' => $projectName,
             'settings.project_logo' => $projectLogo,
+            'settings.project_logo_image' => $projectLogoImage,
             'settings.active_theme' => $activeTheme,
             'settings.project_description' => $projectDescription,
         ]);

@@ -13,10 +13,14 @@
     <!-- Brand logo area -->
     <div class="logo-container h-16 flex items-center justify-between px-6 border-b border-slate-200 dark:border-slate-800/60 shrink-0">
         <a href="{{ $isSuperAdmin ? route('admin.dashboard') : route('dashboard') }}" class="flex items-center gap-3 no-underline">
-            <div class="p-2 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 shadow-md">
-                <i data-lucide="{{ config('settings.project_logo', 'shield') }}" class="w-5 h-5 text-white"></i>
-            </div>
-            <span class="logo-full-text font-bold text-lg tracking-tight text-slate-900 dark:text-white">{{ config('app.name', 'SaaSStater') }}</span>
+            @if(config('settings.project_logo_image'))
+                <img src="{{ config('settings.project_logo_image') }}" alt="{{ config('settings.project_name', 'SaaSStater') }}" class="h-8 w-auto object-contain">
+            @else
+                <div class="p-2 rounded-xl bg-gradient-to-tr from-purple-600 to-indigo-600 shadow-md">
+                    <i data-lucide="{{ config('settings.project_logo', 'shield') }}" class="w-5 h-5 text-white"></i>
+                </div>
+            @endif
+            <span class="logo-full-text font-bold text-lg tracking-tight text-slate-900 dark:text-white">{{ config('settings.project_name', config('app.name', 'SaaSStater')) }}</span>
         </a>
     </div>
 

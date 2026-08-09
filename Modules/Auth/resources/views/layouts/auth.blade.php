@@ -315,9 +315,19 @@
         <div class="auth-left-inner">
             @php
                 $logoIcon = config('settings.project_logo', 'shield');
+                $logoImage = config('settings.project_logo_image', null);
                 $biIcon = match($logoIcon) {
                     'shield' => 'bi-shield-check',
                     'box' => 'bi-box-seam',
+                    'shopping-cart' => 'bi-cart-check-fill',
+                    'store' => 'bi-shop',
+                    'package' => 'bi-box-seam-fill',
+                    'layers' => 'bi-layers-fill',
+                    'truck' => 'bi-truck',
+                    'award' => 'bi-award-fill',
+                    'bar-chart-2' => 'bi-bar-chart-fill',
+                    'rocket' => 'bi-rocket-takeoff-fill',
+                    'zap' => 'bi-lightning-charge-fill',
                     'cpu' => 'bi-cpu-fill',
                     'database' => 'bi-database-fill',
                     'globe' => 'bi-globe',
@@ -325,17 +335,27 @@
                     'key' => 'bi-key-fill',
                     'lock' => 'bi-lock-fill',
                     'settings' => 'bi-gear-fill',
+                    'user' => 'bi-person-fill',
                     'activity' => 'bi-activity',
+                    'briefcase' => 'bi-briefcase-fill',
+                    'calendar' => 'bi-calendar-event',
+                    'compass' => 'bi-compass',
+                    'feather' => 'bi-feather',
                     'server' => 'bi-server',
                     'terminal' => 'bi-terminal-fill',
+                    'wind' => 'bi-wind',
                     default => 'bi-shield-check',
                 };
             @endphp
 
             {{-- Brand --}}
-            <a href="/" class="auth-brand">
-                <i class="bi {{ $biIcon }}"></i>
-                {{ config('settings.project_name', config('app.name', 'SaaSStater')) }}
+            <a href="/" class="auth-brand d-flex align-items-center gap-2">
+                @if(!empty($logoImage))
+                    <img src="{{ asset($logoImage) }}" alt="{{ config('settings.project_name', 'SaaSStater') }}" style="height: 32px; width: auto; object-fit: contain;">
+                @else
+                    <i class="bi {{ $biIcon }}"></i>
+                @endif
+                <span>{{ config('settings.project_name', config('app.name', 'SaaSStater')) }}</span>
             </a>
 
             {{-- Hero --}}

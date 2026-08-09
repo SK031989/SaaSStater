@@ -33,24 +33,33 @@
                         <select name="project_logo" id="project_logo" class="form-select block w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-slate-850 dark:border-slate-855 dark:text-white">
                             @php
                                 $logos = [
-                                    'shield' => 'Shield',
-                                    'box' => 'Box',
-                                    'cpu' => 'CPU',
-                                    'database' => 'Database',
-                                    'globe' => 'Globe',
-                                    'heart' => 'Heart',
-                                    'key' => 'Key',
-                                    'lock' => 'Lock',
-                                    'settings' => 'Settings',
-                                    'user' => 'User',
-                                    'activity' => 'Activity',
-                                    'briefcase' => 'Briefcase',
-                                    'calendar' => 'Calendar',
-                                    'compass' => 'Compass',
-                                    'feather' => 'Feather',
-                                    'server' => 'Server',
-                                    'terminal' => 'Terminal',
-                                    'wind' => 'Wind'
+                                    'shield' => 'Shield / Security',
+                                    'box' => 'Box / Inventory',
+                                    'shopping-cart' => 'Shopping Cart / POS',
+                                    'store' => 'Store / Retail',
+                                    'package' => 'Package / Products',
+                                    'layers' => 'Layers / ERP Platform',
+                                    'truck' => 'Truck / Logistics',
+                                    'award' => 'Award / Premium',
+                                    'bar-chart-2' => 'Bar Chart / Analytics',
+                                    'rocket' => 'Rocket / SaaS',
+                                    'zap' => 'Zap / Speed',
+                                    'cpu' => 'CPU / Tech',
+                                    'database' => 'Database / Data',
+                                    'globe' => 'Globe / Network',
+                                    'heart' => 'Heart / CRM',
+                                    'key' => 'Key / Auth',
+                                    'lock' => 'Lock / Security',
+                                    'settings' => 'Settings / Systems',
+                                    'user' => 'User / Staff',
+                                    'activity' => 'Activity / Pulse',
+                                    'briefcase' => 'Briefcase / Corporate',
+                                    'calendar' => 'Calendar / Shifts',
+                                    'compass' => 'Compass / Navigation',
+                                    'feather' => 'Feather / Minimal',
+                                    'server' => 'Server / Infrastructure',
+                                    'terminal' => 'Terminal / Dev',
+                                    'wind' => 'Wind / Dynamic'
                                 ];
                             @endphp
                             @foreach($logos as $value => $label)
@@ -58,6 +67,15 @@
                             @endforeach
                         </select>
                         @error('project_logo')
+                            <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <div class="md:col-span-2">
+                        <label for="project_logo_image" class="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">Custom Image Logo URL (Optional)</label>
+                        <input type="text" name="project_logo_image" id="project_logo_image" value="{{ old('project_logo_image', $projectLogoImage) }}" class="form-input block w-full p-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-slate-850 dark:border-slate-855 dark:text-white" placeholder="e.g. /images/logo.png or https://example.com/logo.png">
+                        <p class="text-xs text-slate-400 mt-1">If provided, this image will replace the icon across the admin panel, docs, and public marketing navbar headers.</p>
+                        @error('project_logo_image')
                             <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
                         @enderror
                     </div>

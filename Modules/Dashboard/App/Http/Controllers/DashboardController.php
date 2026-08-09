@@ -246,6 +246,7 @@ class DashboardController extends Controller
         $defaultMode = 'light';
         $projectName = 'SaaSStater';
         $projectLogo = 'shield';
+        $projectLogoImage = '';
         $projectDescription = '';
 
         if (file_exists($settingsPath)) {
@@ -254,10 +255,11 @@ class DashboardController extends Controller
             $defaultMode = $settings['default_mode'] ?? 'light';
             $projectName = $settings['project_name'] ?? 'SaaSStater';
             $projectLogo = $settings['project_logo'] ?? 'shield';
+            $projectLogoImage = $settings['project_logo_image'] ?? '';
             $projectDescription = $settings['project_description'] ?? '';
         }
 
-        return view('dashboard::settings', compact('activeTheme', 'defaultMode', 'projectName', 'projectLogo', 'projectDescription'));
+        return view('dashboard::settings', compact('activeTheme', 'defaultMode', 'projectName', 'projectLogo', 'projectLogoImage', 'projectDescription'));
     }
 
     /**
@@ -270,6 +272,7 @@ class DashboardController extends Controller
             'default_mode' => 'required|string|in:light,dark',
             'project_name' => 'required|string|max:50',
             'project_logo' => 'required|string|max:50',
+            'project_logo_image' => 'nullable|string|max:255',
             'project_description' => 'nullable|string|max:500',
         ]);
 
@@ -283,6 +286,7 @@ class DashboardController extends Controller
         $settings['default_mode'] = $request->input('default_mode');
         $settings['project_name'] = $request->input('project_name');
         $settings['project_logo'] = $request->input('project_logo');
+        $settings['project_logo_image'] = $request->input('project_logo_image');
         $settings['project_description'] = $request->input('project_description');
 
         file_put_contents($settingsPath, json_encode($settings, JSON_PRETTY_PRINT));
@@ -292,6 +296,7 @@ class DashboardController extends Controller
             'app.name' => $settings['project_name'],
             'settings.project_name' => $settings['project_name'],
             'settings.project_logo' => $settings['project_logo'],
+            'settings.project_logo_image' => $settings['project_logo_image'],
             'settings.active_theme' => $settings['active_theme'],
             'settings.project_description' => $settings['project_description'],
         ]);
